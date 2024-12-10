@@ -23,15 +23,13 @@ public class Bootstrap implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // Crear usuarios con builder
         Usuario root = Usuario.builder()
-                .usuario("root")
+                .usuario("francoleon2001@gmail.com")
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .estadoUsuario(EstadoUsuario.HABILITADO)
                 .rol(Rol.CLIENTE)
                 .build();
 
-
         userRepository.saveAll(List.of(root));
-
 
     }
 
