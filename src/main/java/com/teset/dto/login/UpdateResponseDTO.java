@@ -9,5 +9,4 @@ import lombok.Data;
 public class UpdateResponseDTO {
     private String username;
     private Rol role;
-    private RolEntityDTO roleEntity;
 }

@@ -27,7 +27,7 @@ ENV IMG_PATH=/img
 ENV JAVA_OPTS="-Xms256m -Xmx512m"
 
 # Copy the JAR file from the previous stage
-COPY --from=build /app/target/gifa_api-0.0.1-SNAPSHOT.jar /app/gifa_api.jar
+COPY --from=build /app/target/teset-0.0.1-SNAPSHOT.jar /app/teset.jar
 
 # Create necessary volumes and directories
 VOLUME /temp

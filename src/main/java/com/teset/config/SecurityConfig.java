@@ -30,11 +30,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    private static final String ADMINISTRADOR = Rol.ADMINISTRADOR.toString();
-    private static final String SUPERVISOR = Rol.SUPERVISOR.toString();
-    private static final String GERENTE = Rol.GERENTE.toString();
-    private static final String OPERADOR = Rol.OPERADOR.toString();
-    private static final String CHOFER = Rol.CHOFER.toString();
+    private static final String ADMINISTRADOR = Rol.CLIENTE.toString();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -81,14 +77,9 @@ public class SecurityConfig {
     private void configureChoferEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST, "/chofer/registrar").hasRole(ADMINISTRADOR)
-                .requestMatchers(HttpMethod.PATCH, "/chofer/asignarChofer").hasRole(SUPERVISOR)
-                .requestMatchers(HttpMethod.GET, "/chofer/verChoferes").hasAnyRole(ADMINISTRADOR, SUPERVISOR)
-                .requestMatchers(HttpMethod.GET, "/chofer/verVehiculo").hasAnyRole(CHOFER);
+                .requestMatchers(HttpMethod.GET, "/chofer/verChoferes").hasAnyRole(ADMINISTRADOR);
 
     }
 
-    private void configureCargarCombustibleEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
-        authRequest
-                .requestMatchers(HttpMethod.POST, "/gestionDeCombustible/cargarCombustible").hasRole(CHOFER);
-    }
+
 }

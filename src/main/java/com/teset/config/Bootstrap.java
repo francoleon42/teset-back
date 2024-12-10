@@ -17,57 +17,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Bootstrap implements ApplicationRunner {
     private final IUsuarioRepository userRepository;
-    private final IChoferRepository choferRepository;
-
 
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // Crear usuarios con builder
-        Usuario admin = Usuario.builder()
-                .usuario("admin")
+        Usuario root = Usuario.builder()
+                .usuario("root")
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .estadoUsuario(EstadoUsuario.HABILITADO)
-                .rol(Rol.ADMINISTRADOR)
+                .rol(Rol.CLIENTE)
                 .build();
 
-        Usuario operador = Usuario.builder()
-                .usuario("operador")
-                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
-                .estadoUsuario(EstadoUsuario.HABILITADO)
-                .rol(Rol.OPERADOR)
-                .build();
 
-        Usuario supervisor = Usuario.builder()
-                .usuario("supervisor")
-                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
-                .estadoUsuario(EstadoUsuario.HABILITADO)
-                .rol(Rol.SUPERVISOR)
-                .build();
+        userRepository.saveAll(List.of(root));
 
-        Usuario gerente = Usuario.builder()
-                .usuario("gerente")
-                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
-                .estadoUsuario(EstadoUsuario.HABILITADO)
-                .rol(Rol.GERENTE)
-                .build();
-
-        userRepository.saveAll(List.of(admin, operador, supervisor, gerente));
-
-
-        Usuario usuarioChofer = Usuario.builder()
-                .usuario("chofer")
-                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
-                .rol(Rol.CHOFER)
-                .estadoUsuario(EstadoUsuario.HABILITADO)
-                .build();
-
-        Chofer chofer = Chofer.builder()
-                .usuario(usuarioChofer)
-                .nombre("chofer1")
-                .build();
-
-        choferRepository.saveAll(List.of(chofer));
 
     }
 
