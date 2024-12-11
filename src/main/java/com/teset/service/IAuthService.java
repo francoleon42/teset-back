@@ -5,7 +5,10 @@ import com.teset.dto.login.*;
 import java.util.List;
 
 public interface IAuthService {
-    LoginResponseDTO login(LoginRequestDTO userDto);
+    LoginPasoUnoResponseDTO loginPasoUno(LoginRequestDTO userDto);
+    LoginResponseDTO loginPasoDos(CodigoVerificationRequestDTO requestDto);
+
+
     LoginResponseDTO register(RegisterRequestDTO userToRegisterDto);
     void logout(String token);
     void update(Integer id, UpdateRequestDTO userToUpdateDto);

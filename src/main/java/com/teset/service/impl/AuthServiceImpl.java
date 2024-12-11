@@ -32,7 +32,7 @@ public class AuthServiceImpl implements IAuthService {
 
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO userDto) {
+    public  LoginPasoUnoResponseDTO loginPasoUno(LoginRequestDTO userDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                 userDto.getPassword()));
 
@@ -43,16 +43,10 @@ public class AuthServiceImpl implements IAuthService {
         if(user.getEstadoUsuario() == EstadoUsuario.INHABILITADO){
            throw new LoginException("El usuario esta inhabilitado");
         }
-        String token = jwtService.getToken(user);
 
        enviarCodigoDeVerificacion(user,"VERIFICACION DE INICIO SESION");
 
-        return LoginResponseDTO
-                .builder()
-                .username(userDto.getUsername())
-                .token(token)
-                .role(user.getRol())
-                .build();
+        return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
     }
 
     private void enviarCodigoDeVerificacion(Usuario user, String asunto){
@@ -62,6 +56,31 @@ public class AuthServiceImpl implements IAuthService {
 
         user.setCodigoDeVerificacion(codigo);
         userRepository.save(user);
+    }
+
+    @Override
+    public LoginResponseDTO loginPasoDos(CodigoVerificationRequestDTO requestDto) {
+        Usuario user = userRepository
+                .findByUsuario(requestDto.getUsername())
+                .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
+
+        if (user.getCodigoDeVerificacion() == null || user.getCodigoDeVerificacion() != requestDto.getCodigo()) {
+            throw new LoginException("El código de verificación es incorrecto o ha expirado");
+        }
+
+        // Limpiar el código para evitar reutilización
+        user.setCodigoDeVerificacion(null);
+        userRepository.save(user);
+
+        // Generar el token
+        String token = jwtService.getToken(user);
+
+        return LoginResponseDTO
+                .builder()
+                .username(user.getUsuario())
+                .token(token)
+                .role(user.getRol())
+                .build();
     }
 
 
