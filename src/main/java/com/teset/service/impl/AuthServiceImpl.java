@@ -5,6 +5,7 @@ import com.teset.dto.login.*;
 import com.teset.exception.LoginException;
 import com.teset.exception.NotFoundException;
 import com.teset.repository.IUsuarioRepository;
+import com.teset.service.IEmailService;
 import com.teset.utils.enums.EstadoUsuario;
 import com.teset.utils.enums.Rol;
 import com.teset.exception.RegisterException;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements IAuthService {
+    private final IEmailService emailService;
     private final IUsuarioRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -42,6 +45,7 @@ public class AuthServiceImpl implements IAuthService {
         }
         String token = jwtService.getToken(user);
 
+        enviarCodigoDeVerificacion(user.getUsuario(),"VERIFICACION DE INICIO SESION");
         return LoginResponseDTO
                 .builder()
                 .username(userDto.getUsername())
@@ -50,7 +54,11 @@ public class AuthServiceImpl implements IAuthService {
                 .build();
     }
 
-
+    private void enviarCodigoDeVerificacion(String to, String asunto){
+        Random random = new Random();
+        int codigo = 10000 + random.nextInt(90000);
+        emailService.enviarCorreo(to, asunto, "Codigo de verificacion de logueo: "+codigo);
+    }
 
 
 
