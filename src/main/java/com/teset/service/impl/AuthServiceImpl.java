@@ -51,12 +51,13 @@ public class AuthServiceImpl implements IAuthService {
 
     private void enviarCodigoDeVerificacion(Usuario user, String asunto){
         Random random = new Random();
-        int codigo = 10000 + random.nextInt(90000);
+        Integer codigo = 10000 + random.nextInt(90000);
         emailService.enviarCorreo(user.getUsuario(), asunto, "Codigo de verificacion de logueo: "+codigo);
 
         user.setCodigoDeVerificacion(codigo);
         userRepository.save(user);
     }
+    
 
     @Override
     public LoginResponseDTO loginStepTwo(CodigoVerificationRequestDTO requestDto) {
@@ -64,7 +65,7 @@ public class AuthServiceImpl implements IAuthService {
                 .findByUsuario(requestDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
 
-        if (user.getCodigoDeVerificacion() == null || user.getCodigoDeVerificacion() != requestDto.getCodigo()) {
+        if (user.getCodigoDeVerificacion() == null || !user.getCodigoDeVerificacion().equals(requestDto.getCodigo()) ) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
