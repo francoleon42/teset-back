@@ -10,11 +10,14 @@ import java.util.Properties;
 public class MailConfiguration {
 
     public JavaMailSender getJavaMailSender() {
+        String email = System.getenv("EMAIL_SENDER");
+        String password = System.getenv("PASSWORD_SENDER");
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("<Correo>");
-        mailSender.setPassword("<Password>");
+        mailSender.setUsername(email);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
