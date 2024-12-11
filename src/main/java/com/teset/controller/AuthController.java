@@ -25,14 +25,16 @@ public class AuthController {
         return ResponseEntity.ok(authService.loginStepTwo(codigoVerificationRequestDTO));
     }
 
+
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDto){
         return new ResponseEntity<>(authService.register(registerRequestDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UpdateRequestDTO updateRequestDto){
-        authService.update(id, updateRequestDto);
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UpdatePasswordRequestDTO updateRequestDto){
+        authService.updateStepTwo(id, updateRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PatchMapping("/inhabilitar/{id}")

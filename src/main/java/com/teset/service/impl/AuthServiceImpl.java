@@ -32,7 +32,7 @@ public class AuthServiceImpl implements IAuthService {
 
 
     @Override
-    public  LoginPasoUnoResponseDTO loginStepOne(LoginRequestDTO userDto) {
+    public LoginPasoUnoResponseDTO loginStepOne(LoginRequestDTO userDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                 userDto.getPassword()));
 
@@ -40,24 +40,24 @@ public class AuthServiceImpl implements IAuthService {
                 .findByUsuario(userDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontro el usuario con username: " + userDto.getUsername()));
 
-        if(user.getEstadoUsuario() == EstadoUsuario.INHABILITADO){
-           throw new LoginException("El usuario esta inhabilitado");
+        if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
+            throw new LoginException("El usuario esta inhabilitado");
         }
 
-       enviarCodigoDeVerificacion(user,"VERIFICACION DE INICIO SESION");
+        enviarCodigoDeVerificacion(user, "VERIFICACION DE INICIO SESION");
 
         return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
     }
 
-    private void enviarCodigoDeVerificacion(Usuario user, String asunto){
+    private void enviarCodigoDeVerificacion(Usuario user, String asunto) {
         Random random = new Random();
         Integer codigo = 10000 + random.nextInt(90000);
-        emailService.enviarCorreo(user.getUsuario(), asunto, "Codigo de verificacion de logueo: "+codigo);
+        emailService.enviarCorreo(user.getUsuario(), asunto, "Codigo de verificacion de logueo: " + codigo);
 
         user.setCodigoDeVerificacion(codigo);
         userRepository.save(user);
     }
-    
+
 
     @Override
     public LoginResponseDTO loginStepTwo(CodigoVerificationRequestDTO requestDto) {
@@ -65,7 +65,7 @@ public class AuthServiceImpl implements IAuthService {
                 .findByUsuario(requestDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
 
-        if (user.getCodigoDeVerificacion() == null || !user.getCodigoDeVerificacion().equals(requestDto.getCodigo()) ) {
+        if (user.getCodigoDeVerificacion() == null || !user.getCodigoDeVerificacion().equals(requestDto.getCodigo())) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
@@ -83,8 +83,6 @@ public class AuthServiceImpl implements IAuthService {
                 .role(user.getRol())
                 .build();
     }
-
-
 
     @Override
     public LoginResponseDTO register(RegisterRequestDTO userToRegisterDto) {
@@ -115,20 +113,35 @@ public class AuthServiceImpl implements IAuthService {
         jwtService.addToBlacklist(jwt);
     }
 
+
     @Override
-    public void update(Integer id, UpdateRequestDTO userToUpdateDto) {
+    public void updateStepOne(Integer id) {
+        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
+        enviarCodigoDeVerificacionCambioPassword(user);
+    }
+    private void enviarCodigoDeVerificacionCambioPassword(Usuario user) {
+        // codigo o link seguro
+        Random random = new Random();
+        Integer codigo = 100000 + random.nextInt(90000);
+        emailService.enviarCorreo(user.getUsuario(), "CAMBIO DE CONTRASEÑA", "Codigo de verificacion de logueo: " + codigo);
+
+        user.setCodigoDeVerificacion(codigo);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto) {
+
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
 
-        Optional.ofNullable(userToUpdateDto.getUsername()).ifPresent(user::setUsuario);
         Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getPassword())).ifPresent(user::setContrasena);
-
         userRepository.save(user);
     }
 
     @Override
     public void habilitar(Integer id) {
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        if(user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
+        if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
             user.setEstadoUsuario(EstadoUsuario.HABILITADO);
             userRepository.save(user);
         }
@@ -137,7 +150,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void inhabilitar(Integer id) {
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        if(user.getEstadoUsuario() == EstadoUsuario.HABILITADO) {
+        if (user.getEstadoUsuario() == EstadoUsuario.HABILITADO) {
             user.setEstadoUsuario(EstadoUsuario.INHABILITADO);
             userRepository.save(user);
         }
