@@ -1,9 +1,6 @@
 package com.teset.controller;
 
-import com.teset.dto.login.GetUserDTO;
-import com.teset.dto.login.LoginRequestDTO;
-import com.teset.dto.login.RegisterRequestDTO;
-import com.teset.dto.login.UpdateRequestDTO;
+import com.teset.dto.login.*;
 import com.teset.service.IAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +15,14 @@ import java.util.List;
 public class AuthController {
     private final IAuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDto){
-        return ResponseEntity.ok(authService.login(loginRequestDto));
+    @PostMapping("/login/step-one")
+    public ResponseEntity<?> loginPasoUno(@RequestBody LoginRequestDTO loginRequestDto){
+        return ResponseEntity.ok(authService.loginStepOne(loginRequestDto));
+    }
+
+    @PostMapping("/login/step-two")
+    public ResponseEntity<?> loginPasoDos(@RequestBody CodigoVerificationRequestDTO codigoVerificationRequestDTO){
+        return ResponseEntity.ok(authService.loginStepTwo(codigoVerificationRequestDTO));
     }
 
     @PostMapping("/register")

@@ -32,7 +32,7 @@ public class AuthServiceImpl implements IAuthService {
 
 
     @Override
-    public  LoginPasoUnoResponseDTO loginPasoUno(LoginRequestDTO userDto) {
+    public  LoginPasoUnoResponseDTO loginStepOne(LoginRequestDTO userDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                 userDto.getPassword()));
 
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public LoginResponseDTO loginPasoDos(CodigoVerificationRequestDTO requestDto) {
+    public LoginResponseDTO loginStepTwo(CodigoVerificationRequestDTO requestDto) {
         Usuario user = userRepository
                 .findByUsuario(requestDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
