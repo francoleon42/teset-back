@@ -39,6 +39,10 @@ public class Usuario implements UserDetails {
     @Column(name = "estado_usuario", nullable = false)
     private EstadoUsuario estadoUsuario;
 
+
+    @Column(name = "codigo_de_verificacion")
+    private Integer codigoDeVerificacion;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));

@@ -45,7 +45,8 @@ public class AuthServiceImpl implements IAuthService {
         }
         String token = jwtService.getToken(user);
 
-        enviarCodigoDeVerificacion(user.getUsuario(),"VERIFICACION DE INICIO SESION");
+       enviarCodigoDeVerificacion(user,"VERIFICACION DE INICIO SESION");
+
         return LoginResponseDTO
                 .builder()
                 .username(userDto.getUsername())
@@ -54,10 +55,13 @@ public class AuthServiceImpl implements IAuthService {
                 .build();
     }
 
-    private void enviarCodigoDeVerificacion(String to, String asunto){
+    private void enviarCodigoDeVerificacion(Usuario user, String asunto){
         Random random = new Random();
         int codigo = 10000 + random.nextInt(90000);
-        emailService.enviarCorreo(to, asunto, "Codigo de verificacion de logueo: "+codigo);
+        emailService.enviarCorreo(user.getUsuario(), asunto, "Codigo de verificacion de logueo: "+codigo);
+
+        user.setCodigoDeVerificacion(codigo);
+        userRepository.save(user);
     }
 
 
