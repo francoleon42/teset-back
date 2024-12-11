@@ -40,8 +40,8 @@ public class Usuario implements UserDetails {
     private EstadoUsuario estadoUsuario;
 
 
-    @Column(name = "codigo_de_verificacion")
-    private Integer codigoDeVerificacion;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<UserCode> userCodes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

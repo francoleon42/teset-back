@@ -4,9 +4,12 @@ import com.teset.config.jwt.JwtService;
 import com.teset.dto.login.*;
 import com.teset.exception.LoginException;
 import com.teset.exception.NotFoundException;
+import com.teset.model.UserCode;
+import com.teset.repository.IUserCodeRepository;
 import com.teset.repository.IUsuarioRepository;
 import com.teset.service.IEmailService;
 import com.teset.utils.enums.EstadoUsuario;
+import com.teset.utils.enums.PropositoCode;
 import com.teset.utils.enums.Rol;
 import com.teset.exception.RegisterException;
 import com.teset.model.Usuario;
@@ -17,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,6 +34,7 @@ public class AuthServiceImpl implements IAuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final IUserCodeRepository userCodeRepository;
 
 
     @Override
@@ -43,35 +49,60 @@ public class AuthServiceImpl implements IAuthService {
         if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
             throw new LoginException("El usuario esta inhabilitado");
         }
-
-        enviarCodigoDeVerificacion(user, "VERIFICACION DE INICIO SESION");
+        generarCodigo(user,PropositoCode.LOGIN);
 
         return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
     }
-
-    private void enviarCodigoDeVerificacion(Usuario user, String asunto) {
+    private void generarCodigo(Usuario user,PropositoCode proposito){
         Random random = new Random();
         Integer codigo = 10000 + random.nextInt(90000);
-        emailService.enviarCorreo(user.getUsuario(), asunto, "Codigo de verificacion de logueo: " + codigo);
 
-        user.setCodigoDeVerificacion(codigo);
-        userRepository.save(user);
+        UserCode userCode = getUserCodeByProposito(user.getUsername(), proposito);
+        if(userCode == null ){
+            userCode = UserCode
+                    .builder()
+                    .codigo(codigo)
+                    .propositoCode(proposito)
+                    .creacion(LocalDateTime.now())
+                    .usuario(user)
+                    .build();
+        }
+
+        userCode.setCodigo(codigo);
+        userCodeRepository.save(userCode);
+
+        enviarCodigoByCorreo(user.getUsuario(),proposito,codigo);
     }
 
+    private void enviarCodigoByCorreo(String destino ,PropositoCode proposito,Integer codigo){
+        String asunto = "";
+        String texto="";
+        if(proposito == PropositoCode.LOGIN){
+            asunto = "VERIFICACION DE INICIO SESION";
+            texto = "Codigo de verificacion de logueo: " + codigo;
+        }
+        emailService.enviarCorreo(destino, asunto, "Codigo de verificacion de logueo: " + codigo);
+    }
+
+
+    private UserCode getUserCodeByProposito(String username, PropositoCode proposito) {
+        return userCodeRepository.findByPropositoAndUsername(username, proposito).orElse(null);
+    }
 
     @Override
     public LoginResponseDTO loginStepTwo(CodigoVerificationRequestDTO requestDto) {
         Usuario user = userRepository
                 .findByUsuario(requestDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
-
-        if (user.getCodigoDeVerificacion() == null || !user.getCodigoDeVerificacion().equals(requestDto.getCodigo())) {
+        UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.LOGIN);
+        if (userCode.getCodigo() == null || !userCode.getCodigo().equals(requestDto.getCodigo())
+            || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
         // Limpiar el código para evitar reutilización
-        user.setCodigoDeVerificacion(null);
-        userRepository.save(user);
+        userCode.setCodigo(null);
+        userCodeRepository.save(userCode);
 
         // Generar el token
         String token = jwtService.getToken(user);
@@ -82,6 +113,31 @@ public class AuthServiceImpl implements IAuthService {
                 .token(token)
                 .role(user.getRol())
                 .build();
+    }
+
+    @Override
+    public void updateStepOne(Integer id) {
+        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
+        enviarCodigoDeVerificacionCambioPassword(user);
+    }
+
+    private void enviarCodigoDeVerificacionCambioPassword(Usuario user) {
+        // codigo o link seguro
+        Random random = new Random();
+        Integer codigo = 100000 + random.nextInt(90000);
+        emailService.enviarCorreo(user.getUsuario(), "CAMBIO DE CONTRASEÑA", "Codigo de verificacion de logueo: " + codigo);
+
+//        user.setCodigoDeVerificacion(codigo);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto) {
+
+        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
+
+        Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getPassword())).ifPresent(user::setContrasena);
+        userRepository.save(user);
     }
 
     @Override
@@ -113,30 +169,6 @@ public class AuthServiceImpl implements IAuthService {
         jwtService.addToBlacklist(jwt);
     }
 
-
-    @Override
-    public void updateStepOne(Integer id) {
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        enviarCodigoDeVerificacionCambioPassword(user);
-    }
-    private void enviarCodigoDeVerificacionCambioPassword(Usuario user) {
-        // codigo o link seguro
-        Random random = new Random();
-        Integer codigo = 100000 + random.nextInt(90000);
-        emailService.enviarCorreo(user.getUsuario(), "CAMBIO DE CONTRASEÑA", "Codigo de verificacion de logueo: " + codigo);
-
-        user.setCodigoDeVerificacion(codigo);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto) {
-
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-
-        Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getPassword())).ifPresent(user::setContrasena);
-        userRepository.save(user);
-    }
 
     @Override
     public void habilitar(Integer id) {
