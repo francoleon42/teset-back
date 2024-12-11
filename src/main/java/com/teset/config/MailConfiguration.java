@@ -1,5 +1,6 @@
 package com.teset.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -9,6 +10,7 @@ import java.util.Properties;
 @Configuration
 public class MailConfiguration {
 
+    @Bean
     public JavaMailSender getJavaMailSender() {
         String email = System.getenv("EMAIL_SENDER");
         String password = System.getenv("PASSWORD_SENDER");
