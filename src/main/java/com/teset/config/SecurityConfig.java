@@ -42,7 +42,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authRequest -> {
                     configurePublicEndpoints(authRequest);
-                    configureChoferEndpoints(authRequest);
+                    configureUsuarioEndpoints(authRequest);
 
                 })
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -69,13 +69,15 @@ public class SecurityConfig {
         authRequest
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-one").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-two").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/auth/updateStepOne").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/auth/updateStepTwo").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ping").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
     }
 
-    private void configureChoferEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
+    private void configureUsuarioEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST, "/chofer/registrar").hasRole(ADMINISTRADOR)
                 .requestMatchers(HttpMethod.GET, "/chofer/verChoferes").hasAnyRole(ADMINISTRADOR);

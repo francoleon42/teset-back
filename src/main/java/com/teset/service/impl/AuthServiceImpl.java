@@ -129,7 +129,7 @@ public class AuthServiceImpl implements IAuthService {
 
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REST_PASSWORD);
         if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userToUpdateDto.getCodigo())
-                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
+                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 2) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
@@ -138,7 +138,7 @@ public class AuthServiceImpl implements IAuthService {
         userCodeRepository.save(userCode);
 
         //Actualizor el password de usuario
-        Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getPassword())).ifPresent(user::setContrasena);
+        Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getNewPassword())).ifPresent(user::setContrasena);
         userRepository.save(user);
     }
 
