@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdatePasswordRequestDTO {
     private String password;
+    Integer codigo;
 }

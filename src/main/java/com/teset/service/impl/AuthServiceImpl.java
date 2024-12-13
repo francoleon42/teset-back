@@ -118,24 +118,26 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void updateStepOne(Integer id) {
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        enviarCodigoDeVerificacionCambioPassword(user);
+        generarCodigo(user,PropositoCode.REST_PASSWORD);
     }
 
-    private void enviarCodigoDeVerificacionCambioPassword(Usuario user) {
-        // codigo o link seguro
-        Random random = new Random();
-        Integer codigo = 100000 + random.nextInt(90000);
-        emailService.enviarCorreo(user.getUsuario(), "CAMBIO DE CONTRASEÑA", "Codigo de verificacion de logueo: " + codigo);
-
-//        user.setCodigoDeVerificacion(codigo);
-        userRepository.save(user);
-    }
 
     @Override
     public void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto) {
 
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
 
+        UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REST_PASSWORD);
+        if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userToUpdateDto.getCodigo())
+                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
+            throw new LoginException("El código de verificación es incorrecto o ha expirado");
+        }
+
+        // Limpiar el código para evitar reutilización
+        userCode.setCodigo(null);
+        userCodeRepository.save(userCode);
+
+        //Actualizor el password de usuario
         Optional.ofNullable(passwordEncoder.encode(userToUpdateDto.getPassword())).ifPresent(user::setContrasena);
         userRepository.save(user);
     }
