@@ -67,6 +67,7 @@ public class SecurityConfig {
 
     private void configurePublicEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
+                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-one").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-two").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/auth/updateStepOne").hasRole(Rol.CLIENTE.toString())

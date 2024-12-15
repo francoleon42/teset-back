@@ -33,9 +33,6 @@ public class Usuario implements UserDetails {
     @Column(name = "contrasena", nullable = false, length = 100)
     private String contrasena;
 
-    @Column(name = "telefono", nullable = false)
-    private String telefono;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false)

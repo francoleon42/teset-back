@@ -49,16 +49,17 @@ public class AuthServiceImpl implements IAuthService {
         if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
             throw new LoginException("El usuario esta inhabilitado");
         }
-        generarCodigo(user,PropositoCode.LOGIN);
+        generarCodigo(user, PropositoCode.LOGIN);
 
         return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
     }
-    private void generarCodigo(Usuario user,PropositoCode proposito){
+
+    private void generarCodigo(Usuario user, PropositoCode proposito) {
         Random random = new Random();
         Integer codigo = 10000 + random.nextInt(90000);
 
         UserCode userCode = getUserCodeByProposito(user.getUsername(), proposito);
-        if(userCode == null ){
+        if (userCode == null) {
             userCode = UserCode
                     .builder()
                     .codigo(codigo)
@@ -71,13 +72,13 @@ public class AuthServiceImpl implements IAuthService {
         userCode.setCodigo(codigo);
         userCodeRepository.save(userCode);
 
-        enviarCodigoByCorreo(user.getUsuario(),proposito,codigo);
+        enviarCodigoByCorreo(user.getUsuario(), proposito, codigo);
     }
 
-    private void enviarCodigoByCorreo(String destino ,PropositoCode proposito,Integer codigo){
+    private void enviarCodigoByCorreo(String destino, PropositoCode proposito, Integer codigo) {
         String asunto = "";
-        String texto="";
-        if(proposito == PropositoCode.LOGIN){
+        String texto = "";
+        if (proposito == PropositoCode.LOGIN) {
             asunto = "VERIFICACION DE INICIO SESION";
             texto = "Codigo de verificacion de logueo: " + codigo;
         }
@@ -96,7 +97,7 @@ public class AuthServiceImpl implements IAuthService {
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.LOGIN);
         if (userCode.getCodigo() == null || !userCode.getCodigo().equals(requestDto.getCodigo())
-            || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
+                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
@@ -118,7 +119,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void updateStepOne(Integer id) {
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        generarCodigo(user,PropositoCode.REST_PASSWORD);
+        generarCodigo(user, PropositoCode.REST_PASSWORD);
     }
 
 
@@ -144,14 +145,17 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public LoginResponseDTO register(RegisterRequestDTO userToRegisterDto) {
-        if (userRepository.existsByUsuario(userToRegisterDto.getUsername()))
+        if (userRepository.existsByUsuario(userToRegisterDto.getUsername())
+                || userRepository.existsByDni(userToRegisterDto.getDni())) {
             throw new RegisterException("El usuario ya existe en la base de datos.");
+        }
 
         Usuario user = Usuario
                 .builder()
                 .usuario(userToRegisterDto.getUsername())
                 .contrasena(passwordEncoder.encode(userToRegisterDto.getPassword()))
-                .rol(Rol.getRol(userToRegisterDto.getRole()))
+                .dni(userToRegisterDto.getDni())
+                .rol(Rol.CLIENTE)
                 .estadoUsuario(EstadoUsuario.HABILITADO)
                 .build();
 
