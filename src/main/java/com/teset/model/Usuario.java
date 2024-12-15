@@ -24,11 +24,18 @@ public class Usuario implements UserDetails {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "dni", nullable = false)
+    private String dni;
+
     @Column(name = "usuario", nullable = false, length = 50)
     private String usuario;
 
     @Column(name = "contrasena", nullable = false, length = 100)
     private String contrasena;
+
+    @Column(name = "telefono", nullable = false)
+    private String telefono;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false)
