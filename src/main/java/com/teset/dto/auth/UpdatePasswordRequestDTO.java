@@ -1,4 +1,4 @@
-package com.teset.dto.login;
+package com.teset.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CodigoVerificationRequestDTO {
+@NoArgsConstructor
+public class UpdatePasswordRequestDTO {
+    private String newPassword;
     Integer codigo;
-    String username;
 }

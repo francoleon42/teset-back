@@ -1,12 +1,14 @@
-package com.teset.dto.login;
+package com.teset.dto.auth;
 
 import com.teset.utils.enums.Rol;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
 @Builder
-public class UpdateResponseDTO {
+@Data
+public class GetUserDTO {
+    private Integer id;
     private String username;
     private Rol role;
+    private String estado;
 }

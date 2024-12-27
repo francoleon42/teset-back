@@ -1,5 +1,6 @@
 package com.teset.service.impl;
 
+import com.teset.dto.cliente.GetClienteResponseDTO;
 import com.teset.service.IClienteService;
 import com.teset.utils.enums.EstadoCliente;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,14 @@ public class ClienteServiceImpl implements IClienteService {
 
 
     @Override
-    public String getEstadoCliente(String dni) {
-        // desarrollar logica web service o bd para verificar si el cliente esta disponible.
-        return EstadoCliente.DISPONIBLE.toString();
+    public GetClienteResponseDTO getCliente(String dni) {
+        // desarrollar logica para obetener del web service la informacion del cliente si existe
+        // simulo respuesta de web service
+        return GetClienteResponseDTO
+                .builder()
+                .dni("44382619")
+                .email("francoleon2001@gmail.com")
+                .estado(EstadoCliente.DISPONIBLE)
+                .build();
     }
 }

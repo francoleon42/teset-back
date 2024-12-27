@@ -1,14 +1,16 @@
 package com.teset.service.impl;
 
 import com.teset.config.jwt.JwtService;
-import com.teset.dto.login.*;
+import com.teset.dto.cliente.GetClienteResponseDTO;
+import com.teset.dto.auth.*;
 import com.teset.exception.LoginException;
 import com.teset.exception.NotFoundException;
 import com.teset.model.UserCode;
 import com.teset.repository.IUserCodeRepository;
 import com.teset.repository.IUsuarioRepository;
+import com.teset.service.IClienteService;
 import com.teset.service.IEmailService;
-import com.teset.utils.enums.EstadoUsuario;
+import com.teset.utils.enums.EstadoCliente;
 import com.teset.utils.enums.PropositoCode;
 import com.teset.utils.enums.Rol;
 import com.teset.exception.RegisterException;
@@ -36,7 +38,7 @@ public class AuthServiceImpl implements IAuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final IUserCodeRepository userCodeRepository;
-
+    private final IClienteService clienteService;
 
     @Override
     public LoginPasoUnoResponseDTO loginStepOne(LoginRequestDTO userDto) {
@@ -47,19 +49,22 @@ public class AuthServiceImpl implements IAuthService {
                 .findByUsuario(userDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontro el usuario con username: " + userDto.getUsername()));
 
-        if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
-            throw new LoginException("El usuario esta inhabilitado");
-        }
-        generarCodigo(user, PropositoCode.LOGIN);
+
+        generarCodigo(user.getUsername(), PropositoCode.LOGIN);
 
         return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
     }
 
-    private void generarCodigo(Usuario user, PropositoCode proposito) {
+    private void generarCodigo(String username, PropositoCode proposito) {
         Random random = new Random();
         Integer codigo = 10000 + random.nextInt(90000);
 
-        UserCode userCode = getUserCodeByProposito(user.getUsername(), proposito);
+        UserCode userCode = getUserCodeByProposito(username, proposito);
+
+        Usuario user = userRepository
+                .findByUsuario(username)
+                .orElseThrow(() -> new NotFoundException("No se encontro el usuario con username: " + username));
+
         if (userCode == null) {
             userCode = UserCode
                     .builder()
@@ -82,6 +87,14 @@ public class AuthServiceImpl implements IAuthService {
         if (proposito == PropositoCode.LOGIN) {
             asunto = "VERIFICACION DE INICIO SESION";
             texto = "Codigo de verificacion de logueo: " + codigo;
+        }
+        if (proposito == PropositoCode.LOGIN) {
+            asunto = "VERIFICACION DE INICIO SESION";
+            texto = "Codigo de verificacion de logueo: " + codigo;
+        }
+        if (proposito == PropositoCode.REGISTER) {
+            asunto = "VERIFICACION DE REGISTRO";
+            texto = "Codigo de verificacion de registro: " + codigo;
         }
         emailService.enviarCorreo(destino, asunto, "Codigo de verificacion de logueo: " + codigo);
     }
@@ -120,7 +133,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void updateStepOne(Integer id) {
         Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        generarCodigo(user, PropositoCode.REST_PASSWORD);
+        generarCodigo(user.getUsername(), PropositoCode.REST_PASSWORD);
     }
 
 
@@ -145,24 +158,59 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public LoginResponseDTO register(RegisterRequestDTO userToRegisterDto) {
-        if (userRepository.existsByUsuario(userToRegisterDto.getUsername())
-                || userRepository.existsByDni(userToRegisterDto.getDni())) {
-            throw new RegisterException("El usuario ya existe en la base de datos.");
+    public LoginResponseDTO registerStepOne(RegisterRequestDTO userToRegisterDto) {
+        // verificacion de si el usuario esta registrado anteriormente por el sistema principal
+        // obtncion del cliente
+        GetClienteResponseDTO cliente = clienteService.getCliente(userToRegisterDto.getDni());
+        if (cliente.getEstado().toString().equals(EstadoCliente.NO_DISPONIBLE.toString())) {
+            throw new RegisterException("El usuario no es cliente");
         }
+
+        if(userRepository.existsByDni(userToRegisterDto.getDni())){
+                throw new RegisterException("El usuario ya esta registrado");
+        }
+
 
         Usuario user = Usuario
                 .builder()
-                .usuario(userToRegisterDto.getUsername())
-                .contrasena(passwordEncoder.encode(userToRegisterDto.getPassword()))
+                .usuario(cliente.getEmail())
                 .dni(userToRegisterDto.getDni())
                 .rol(Rol.CLIENTE)
-                .alta(LocalDate.now())
-                .estadoUsuario(EstadoUsuario.HABILITADO)
                 .build();
 
         userRepository.save(user);
 
+       generarCodigo(cliente.getEmail(), PropositoCode.REGISTER);
+
+        return LoginResponseDTO
+                .builder()
+                .username(user.getUsuario())
+                .token(jwtService.getToken(user))
+                .role(user.getRol())
+                .build();
+    }
+
+    @Override
+    public LoginResponseDTO registerStepTwo(RegisterTwoRequestDTO userRegisterTwo) {
+        Usuario user = userRepository
+                .findByUsuario(userRegisterTwo.getUsername())
+                .orElseThrow(() -> new NotFoundException("No se encontro el usuario con username: " + userRegisterTwo.getUsername()));
+
+        UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REGISTER);
+        if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userRegisterTwo.getCodigo())
+                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 2) {
+            throw new LoginException("El código de verificación es incorrecto o ha expirado");
+        }
+
+        // Limpiar el código para evitar reutilización
+        userCode.setCodigo(null);
+        userCodeRepository.save(userCode);
+
+        // agrego la contraseña
+        user.setContrasena(passwordEncoder.encode(userRegisterTwo.getPassword()));
+        user.setAlta(LocalDate.now());
+        userRepository.save(user);
+//
         return LoginResponseDTO
                 .builder()
                 .username(user.getUsuario())
@@ -178,23 +226,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
 
-    @Override
-    public void habilitar(Integer id) {
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        if (user.getEstadoUsuario() == EstadoUsuario.INHABILITADO) {
-            user.setEstadoUsuario(EstadoUsuario.HABILITADO);
-            userRepository.save(user);
-        }
-    }
 
-    @Override
-    public void inhabilitar(Integer id) {
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-        if (user.getEstadoUsuario() == EstadoUsuario.HABILITADO) {
-            user.setEstadoUsuario(EstadoUsuario.INHABILITADO);
-            userRepository.save(user);
-        }
-    }
 
 //    @Override
 //    public void remove(Integer id) {
@@ -215,7 +247,6 @@ public class AuthServiceImpl implements IAuthService {
                 .id(user.getId())
                 .username(user.getUsuario())
                 .role(user.getRol())
-                .estado(user.getEstadoUsuario().toString())
                 .build();
     }
 }

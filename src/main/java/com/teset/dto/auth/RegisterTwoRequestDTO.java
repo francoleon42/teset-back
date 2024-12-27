@@ -1,4 +1,5 @@
-package com.teset.dto.login;
+package com.teset.dto.auth;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdatePasswordRequestDTO {
-    private String newPassword;
+public class RegisterTwoRequestDTO {
+
+    String username;
+    String password;
     Integer codigo;
 }

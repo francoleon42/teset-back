@@ -67,11 +67,14 @@ public class SecurityConfig {
 
     private void configurePublicEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/register/step-one").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/auth/register/step-two").permitAll()
+
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-one").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-two").permitAll()
-                .requestMatchers(HttpMethod.PATCH, "/auth/updateStepOne").hasRole(Rol.CLIENTE.toString())
-                .requestMatchers(HttpMethod.PATCH, "/auth/updateStepTwo").hasRole(Rol.CLIENTE.toString())
+
+                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-one").hasRole(Rol.CLIENTE.toString())
+                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-two").hasRole(Rol.CLIENTE.toString())
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ping").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

@@ -1,7 +1,6 @@
 package com.teset.service;
 
-import com.teset.dto.login.*;
-import com.teset.model.Usuario;
+import com.teset.dto.auth.*;
 
 import java.util.List;
 
@@ -14,9 +13,9 @@ public interface IAuthService {
     void updateStepOne(Integer id);
     void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto);
 
-    LoginResponseDTO register(RegisterRequestDTO userToRegisterDto);
+    LoginResponseDTO registerStepOne(RegisterRequestDTO userToRegisterDto);
+    LoginResponseDTO registerStepTwo(RegisterTwoRequestDTO userRegisterTwo);
 
-    void habilitar(Integer id);
-    void inhabilitar(Integer id);
+
     List<GetUserDTO> getAll();
 }

@@ -31,7 +31,7 @@ public class Usuario implements UserDetails {
     @Column(name = "usuario", nullable = false, length = 50)
     private String usuario;
 
-    @Column(name = "contrasena", nullable = false, length = 100)
+    @Column(name = "contrasena", length = 100)
     private String contrasena;
 
 
@@ -39,13 +39,10 @@ public class Usuario implements UserDetails {
     @Column(name = "rol", nullable = false)
     private Rol rol;
 
-    @Column(name = "alta", nullable = false)
+    @Column(name = "alta")
     private LocalDate alta;
 
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado_usuario", nullable = false)
-    private EstadoUsuario estadoUsuario;
 
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)

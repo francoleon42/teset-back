@@ -1,6 +1,6 @@
 package com.teset.controller;
 
-import com.teset.dto.login.*;
+import com.teset.dto.auth.*;
 import com.teset.exception.BadRoleException;
 import com.teset.exception.NotFoundException;
 import com.teset.model.Usuario;
@@ -32,36 +32,29 @@ public class AuthController {
     }
 
 
-    @PatchMapping("/updateStepOne")
+    @PatchMapping("/update/step-one")
     public ResponseEntity<?> loginPasoUno() {
         Usuario user = getUserFromToken();
         authService.updateStepOne(user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/updateStepTwo")
+    @PatchMapping("/update/step-two")
     public ResponseEntity<?> update(@RequestBody UpdatePasswordRequestDTO updateRequestDto) {
         Integer idUser = getUserFromToken().getId();
         authService.updateStepTwo(idUser, updateRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerRequestDto) {
-        return new ResponseEntity<>(authService.register(registerRequestDto), HttpStatus.CREATED);
+    @PostMapping("/register/step-one")
+    public ResponseEntity<?> registerStepOne(@RequestBody RegisterRequestDTO registerRequestDto) {
+        return new ResponseEntity<>(authService.registerStepOne(registerRequestDto), HttpStatus.CREATED);
+    }
+    @PatchMapping("/register/step-two")
+    public ResponseEntity<?> registerStepTwo(@RequestBody RegisterTwoRequestDTO registerTwoRequestDto) {
+        return new ResponseEntity<>(authService.registerStepTwo(registerTwoRequestDto), HttpStatus.OK);
     }
 
-    @PatchMapping("/inhabilitar/{id}")
-    public ResponseEntity<?> inhabilitar(@PathVariable Integer id) {
-        authService.inhabilitar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PatchMapping("/habilitar/{id}")
-    public ResponseEntity<?> habilitar(@PathVariable Integer id) {
-        authService.habilitar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {

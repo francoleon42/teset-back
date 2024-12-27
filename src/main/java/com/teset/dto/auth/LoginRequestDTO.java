@@ -1,4 +1,4 @@
-package com.teset.dto.login;
+package com.teset.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
