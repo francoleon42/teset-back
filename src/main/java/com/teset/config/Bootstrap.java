@@ -10,6 +10,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Profile("!prod")
@@ -27,6 +28,7 @@ public class Bootstrap implements ApplicationRunner {
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .estadoUsuario(EstadoUsuario.HABILITADO)
                 .rol(Rol.CLIENTE)
+                .alta(LocalDate.now())
                 .dni("2400042")
                 .build();
 

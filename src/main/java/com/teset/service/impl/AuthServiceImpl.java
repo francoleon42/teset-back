@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -156,6 +157,7 @@ public class AuthServiceImpl implements IAuthService {
                 .contrasena(passwordEncoder.encode(userToRegisterDto.getPassword()))
                 .dni(userToRegisterDto.getDni())
                 .rol(Rol.CLIENTE)
+                .alta(LocalDate.now())
                 .estadoUsuario(EstadoUsuario.HABILITADO)
                 .build();
 
