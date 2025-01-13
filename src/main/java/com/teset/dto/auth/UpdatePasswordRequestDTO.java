@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdatePasswordRequestDTO {
-    private String newPassword;
+    String dni;
+    String newPassword;
     Integer codigo;
+
 }

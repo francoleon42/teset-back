@@ -15,5 +15,4 @@ public class GetClienteResponseDTO {
     String dni;
     String email;
     EstadoCliente estado;
-
 }

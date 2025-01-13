@@ -73,8 +73,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-one").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login/step-two").permitAll()
 
-                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-one").hasRole(Rol.CLIENTE.toString())
-                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-two").hasRole(Rol.CLIENTE.toString())
+                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-one/{dni}").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/auth/update/step-two").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ping").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

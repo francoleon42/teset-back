@@ -32,18 +32,16 @@ public class AuthController {
     }
 
 
-    @PatchMapping("/update/step-one")
-    public ResponseEntity<?> loginPasoUno() {
-        Usuario user = getUserFromToken();
-        authService.updateStepOne(user.getId());
+    @PatchMapping("/update/step-one/{dni}")
+    public ResponseEntity<?> updateStepOne(@PathVariable String dni) {
+        authService.updateStepOne(dni);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/update/step-two")
-    public ResponseEntity<?> update(@RequestBody UpdatePasswordRequestDTO updateRequestDto) {
-        Integer idUser = getUserFromToken().getId();
-        authService.updateStepTwo(idUser, updateRequestDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> updateStepTwo(@RequestBody UpdatePasswordRequestDTO updateRequestDto) {
+        authService.updateStepTwo( updateRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/step-one")

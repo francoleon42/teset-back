@@ -84,13 +84,14 @@ public class AuthServiceImpl implements IAuthService {
     private void enviarCodigoByCorreo(String destino, PropositoCode proposito, Integer codigo) {
         String asunto = "";
         String texto = "";
+
         if (proposito == PropositoCode.LOGIN) {
             asunto = "VERIFICACION DE INICIO SESION";
             texto = "Codigo de verificacion de logueo: " + codigo;
         }
-        if (proposito == PropositoCode.LOGIN) {
-            asunto = "VERIFICACION DE INICIO SESION";
-            texto = "Codigo de verificacion de logueo: " + codigo;
+        if (proposito == PropositoCode.REST_PASSWORD) {
+            asunto = "CAMBIO DE CONSTRASEÑA";
+            texto = "Codigo de verificacion para el cambio de contraseña: " + codigo;
         }
         if (proposito == PropositoCode.REGISTER) {
             asunto = "VERIFICACION DE REGISTRO";
@@ -131,18 +132,19 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public void updateStepOne(Integer id) {
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
+    public void updateStepOne(String dni) {
+        Usuario user = userRepository.findUsuarioByDni(dni).orElseThrow(() -> new NotFoundException("No se encontró el usuario con dni: " + dni));
         generarCodigo(user.getUsername(), PropositoCode.REST_PASSWORD);
     }
 
 
     @Override
-    public void updateStepTwo(Integer id, UpdatePasswordRequestDTO userToUpdateDto) {
+    public void updateStepTwo( UpdatePasswordRequestDTO userToUpdateDto) {
 
-        Usuario user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("No se encontró el usuario con id: " + id));
-
+        Usuario user = userRepository.findUsuarioByDni( userToUpdateDto.getDni()).orElseThrow(() -> new NotFoundException("No se encontró el usuario con dni: " +   userToUpdateDto.getDni()));
+        System.out.println(user.getUsername());
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REST_PASSWORD);
+
         if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userToUpdateDto.getCodigo())
                 || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 2) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
