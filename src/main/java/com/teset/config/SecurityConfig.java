@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> {
                     configurePublicEndpoints(authRequest);
                     configureClienteEndpoints(authRequest);
+                    configureNegocioEndpoints(authRequest);
 
                 })
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -83,7 +84,16 @@ public class SecurityConfig {
 
     private void configureClienteEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.GET, "/cliente/{dni}").permitAll();
+                .requestMatchers(HttpMethod.GET, "/cliente/{dni}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/cliente/detalle/{dni}").permitAll();
+
+    }
+
+    private void configureNegocioEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
+        authRequest
+                .requestMatchers(HttpMethod.GET, "/negocio/comercios_adheridos").permitAll()
+                .requestMatchers(HttpMethod.GET, "/negocio/contactos").permitAll()
+                .requestMatchers(HttpMethod.GET, "/negocio/novedades").permitAll();
 
     }
 

@@ -2,6 +2,8 @@ package com.teset.controller;
 
 import com.teset.dto.cliente.ClienteResponseDTO;
 import com.teset.dto.negocio.ComercioResponseDTO;
+import com.teset.dto.negocio.ContactoResponseDTO;
+import com.teset.dto.negocio.NovedadResponseDTO;
 import com.teset.service.INegocioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,16 +23,16 @@ public class NegocioController {
     private final INegocioService negocioService;
 
 
-    @GetMapping("/comercios_adheridos/")
+    @GetMapping("/comercios_adheridos")
     public ResponseEntity<List<ComercioResponseDTO>> getcomerciosAdheridos() {
         return new ResponseEntity<>(negocioService.getComerciosAdheridos(), HttpStatus.OK);
     }
-//    @GetMapping("/contactos/")
-//    public ResponseEntity<List<ContactoResponseDTO>> getcomerciosAdheridos() {
-//        return new ResponseEntity<>(negocioService.getContactos(), HttpStatus.OK);
-//    }
-//    @GetMapping("/novedades/")
-//    public ResponseEntity<List<NovedadResponseDTO>> getcomerciosAdheridos() {
-//        return new ResponseEntity<>(negocioService.getNovedades(), HttpStatus.OK);
-//    }
+    @GetMapping("/contactos")
+    public ResponseEntity<List<ContactoResponseDTO>> getContactos() {
+        return new ResponseEntity<>(negocioService.getContactos(), HttpStatus.OK);
+    }
+    @GetMapping("/novedades")
+    public ResponseEntity<List<NovedadResponseDTO>> getNovedades() {
+        return new ResponseEntity<>(negocioService.getNovedades(), HttpStatus.OK);
+    }
 }

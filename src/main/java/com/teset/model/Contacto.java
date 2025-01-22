@@ -30,6 +30,6 @@ public class Contacto {
     private TipoContacto tipo;
 
     @Column(name = "link")
-    private String link;
+    private String logoLink;
 
 }
