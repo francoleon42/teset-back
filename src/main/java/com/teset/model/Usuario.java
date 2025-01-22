@@ -43,7 +43,8 @@ public class Usuario implements UserDetails {
     private LocalDate alta;
 
 
-
+    @Column(name = "cod_dispositivo")
+    private String codDispositivo;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UserCode> userCodes;

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CodigoVerificationRequestDTO {
     Integer codigo;
     String username;
+    String codDispositivo;
 }

@@ -8,4 +8,5 @@ import lombok.Data;
 public class LoginPasoUnoResponseDTO {
 
     private String username;
+    private boolean nuevoDispositivo;
 }

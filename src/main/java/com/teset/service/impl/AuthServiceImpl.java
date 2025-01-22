@@ -42,6 +42,7 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public LoginPasoUnoResponseDTO loginStepOne(LoginRequestDTO userDto) {
+        boolean nuevoDispositivo = false;
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                 userDto.getPassword()));
 
@@ -50,9 +51,12 @@ public class AuthServiceImpl implements IAuthService {
                 .orElseThrow(() -> new NotFoundException("No se encontro el usuario con username: " + userDto.getUsername()));
 
 
-        generarCodigo(user.getUsername(), PropositoCode.LOGIN);
+        if(!user.getCodDispositivo().equals(userDto.getCodDispositivo())){
+            generarCodigo(user.getUsername(), PropositoCode.LOGIN);
+            nuevoDispositivo = true;
+        }
 
-        return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).build();
+        return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).nuevoDispositivo(nuevoDispositivo).build();
     }
 
     private void generarCodigo(String username, PropositoCode proposito) {
@@ -110,10 +114,15 @@ public class AuthServiceImpl implements IAuthService {
         Usuario user = userRepository
                 .findByUsuario(requestDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("No se encontró el usuario con username: " + requestDto.getUsername()));
+
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.LOGIN);
-        if (userCode.getCodigo() == null || !userCode.getCodigo().equals(requestDto.getCodigo())
-                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
-            throw new LoginException("El código de verificación es incorrecto o ha expirado");
+        if(!user.getCodDispositivo().equals(requestDto.getCodDispositivo()) ){
+            user.setCodDispositivo(requestDto.getCodDispositivo());
+            if (  userCode.getCodigo() == null || !userCode.getCodigo().equals(requestDto.getCodigo())
+                    || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
+                throw new LoginException("El código de verificación es incorrecto o ha expirado");
+
+            }
         }
 
         // Limpiar el código para evitar reutilización
@@ -178,6 +187,7 @@ public class AuthServiceImpl implements IAuthService {
                 .usuario(cliente.getEmail())
                 .dni(userToRegisterDto.getDni())
                 .rol(Rol.CLIENTE)
+                .codDispositivo("codigoNuevo")
                 .build();
 
         userRepository.save(user);

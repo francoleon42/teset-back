@@ -29,6 +29,7 @@ public class Bootstrap implements ApplicationRunner {
                 .rol(Rol.CLIENTE)
                 .alta(LocalDate.now())
                 .dni("2400042")
+                .codDispositivo("codigoNuevo")
                 .build();
 
         userRepository.saveAll(List.of(root));
