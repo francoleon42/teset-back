@@ -1,7 +1,9 @@
 package com.teset.service;
 
-import com.teset.dto.cliente.GetClienteResponseDTO;
+import com.teset.dto.cliente.ClienteResponseDTO;
+import com.teset.dto.cliente.DetalleResponseDTO;
 
 public interface IClienteService {
-     GetClienteResponseDTO getCliente(String dni);
+     ClienteResponseDTO getCliente(String dni);
+     DetalleResponseDTO getDetalleCliente(String dni);
 }

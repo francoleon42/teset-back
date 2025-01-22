@@ -1,7 +1,7 @@
 package com.teset.service.impl;
 
 import com.teset.config.jwt.JwtService;
-import com.teset.dto.cliente.GetClienteResponseDTO;
+import com.teset.dto.cliente.ClienteResponseDTO;
 import com.teset.dto.auth.*;
 import com.teset.exception.LoginException;
 import com.teset.exception.NotFoundException;
@@ -172,7 +172,7 @@ public class AuthServiceImpl implements IAuthService {
     public LoginResponseDTO registerStepOne(RegisterRequestDTO userToRegisterDto) {
         // verificacion de si el usuario esta registrado anteriormente por el sistema principal
         // obtncion del cliente
-        GetClienteResponseDTO cliente = clienteService.getCliente(userToRegisterDto.getDni());
+        ClienteResponseDTO cliente = clienteService.getCliente(userToRegisterDto.getDni());
         if (cliente.getEstado().toString().equals(EstadoCliente.NO_DISPONIBLE.toString())) {
             throw new RegisterException("El usuario no es cliente");
         }

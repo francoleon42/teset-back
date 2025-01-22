@@ -83,7 +83,7 @@ public class SecurityConfig {
 
     private void configureClienteEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.GET, "/cliente/get_estado_cliente/{dni}").hasRole(Rol.CLIENTE.toString());
+                .requestMatchers(HttpMethod.GET, "/cliente/{dni}").permitAll();
 
     }
 

@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetClienteResponseDTO {
-
+public class ClienteResponseDTO {
+    String nombre;
+    String saldoDisponible;
+    Double totalAPagar;
     String dni;
     String email;
     EstadoCliente estado;
