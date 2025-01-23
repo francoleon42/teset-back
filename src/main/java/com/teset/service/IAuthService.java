@@ -10,7 +10,7 @@ public interface IAuthService {
 
     void logout(String token);
 
-    void updateStepOne(String dni);
+    UpdateResponseDTO updateStepOne(String dni);
     void updateStepTwo(UpdatePasswordRequestDTO userToUpdateDto);
 
     LoginResponseDTO registerStepOne(RegisterRequestDTO userToRegisterDto);

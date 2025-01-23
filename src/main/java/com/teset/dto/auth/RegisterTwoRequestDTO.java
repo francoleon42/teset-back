@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterTwoRequestDTO {
-
     String username;
     String password;
     Integer codigo;

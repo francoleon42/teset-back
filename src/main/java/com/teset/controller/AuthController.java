@@ -34,8 +34,7 @@ public class AuthController {
 
     @PatchMapping("/update/step-one/{dni}")
     public ResponseEntity<?> updateStepOne(@PathVariable String dni) {
-        authService.updateStepOne(dni);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>( authService.updateStepOne(dni), HttpStatus.OK);
     }
 
     @PatchMapping("/update/step-two")

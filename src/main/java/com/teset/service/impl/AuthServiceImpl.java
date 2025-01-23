@@ -141,9 +141,10 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public void updateStepOne(String dni) {
+    public UpdateResponseDTO updateStepOne(String dni) {
         Usuario user = userRepository.findUsuarioByDni(dni).orElseThrow(() -> new NotFoundException("No se encontró el usuario con dni: " + dni));
         generarCodigo(user.getUsername(), PropositoCode.REST_PASSWORD);
+        return UpdateResponseDTO.builder().username(user.getUsername()).role(user.getRol()).build();
     }
 
 
