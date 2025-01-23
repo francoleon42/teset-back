@@ -1,5 +1,6 @@
 package com.teset.dto.wsTeset;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +14,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteResponseWbDTO {
-    String nombre;
-    //    String email;
-    BigDecimal disponible;
-    BigDecimal saldoAPagar;
-    BigDecimal importePxVto;
 
+    @JsonProperty("Nombre")
+    private String nombre;
+
+    @JsonProperty("Disponible")
+    private Double disponible;
+
+    @JsonProperty("SaldoAPagar")
+    private Double saldoAPagar;
+
+    @JsonProperty("ImportePxVto")
+    private Double importePxVto;
 
 }

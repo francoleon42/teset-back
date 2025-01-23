@@ -9,7 +9,7 @@ import java.util.List;
 public interface IWebServiceTesetClient {
 
     ClienteResponseDTO getClienteTeset(String dni) ;
-    DetalleResponseDTO getDetalleClienteTeset(String dni);
+    List<DetalleResponseDTO> getDetallesClienteTeset(String dni);
     List<ComercioResponseDTO> getComerciosAdheridosTeset();
 
 }

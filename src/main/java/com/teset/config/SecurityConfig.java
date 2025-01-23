@@ -84,8 +84,8 @@ public class SecurityConfig {
 
     private void configureClienteEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.GET, "/cliente/{dni}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/cliente/detalle/{dni}").permitAll();
+                .requestMatchers(HttpMethod.GET, "/cliente/info").permitAll()
+                .requestMatchers(HttpMethod.GET, "/cliente/detalle").permitAll();
 
     }
 

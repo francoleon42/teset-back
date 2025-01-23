@@ -66,17 +66,5 @@ public class AuthController {
     }
 
 
-    private Usuario getUserFromToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication != null && authentication.isAuthenticated())) {
-            throw new NotFoundException("El token no corresponde a un usuario.");
-        }
 
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-        if (usuario.getRol() != Rol.CLIENTE) {
-            throw new BadRoleException("El usuario no corresponde a un cliente.");
-        }
-
-        return usuario;
-    }
 }
