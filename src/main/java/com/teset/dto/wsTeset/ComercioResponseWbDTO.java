@@ -1,5 +1,7 @@
 package com.teset.dto.wsTeset;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,33 +15,20 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ComercioResponseWbDTO {
+    @JsonProperty("Codcom")
     private String codcom;
+
+    @JsonProperty("Cnombre")
     private String cnombre;
-    private String cordench;
-    private String crazonsoc;
+
+    @JsonProperty("Cdomici")
     private String cdomici;
-    private String clocali;
-    private int ccodpos;
-    private String ctelcarac;
-    private String ctelnumero;
-    private String ccodprov;
-    private String cencarga;
-    private String crubro;
-    private String cimpcheq;
-    private String cactivo;
-    private String civatribut;
-    private String civareten;
-    private String ccodgan;
-    private String cnrocuit;
-    private String cjuringbr;
-    private String cnroingbr;
-    private BigDecimal cdescuen;
-    private int cciclopag;
-    private String ctipopag;
-    private String ccodban;
-    private String cctaban;
-    private LocalDateTime cfechaing;
-    private boolean cobratodo;
-    private String excluyea;
+
+    //falta agrgar el url link y logo link
+
+
+
+
 }

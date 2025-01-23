@@ -27,4 +27,6 @@ public class ClienteResponseWbDTO {
     @JsonProperty("ImportePxVto")
     private Double importePxVto;
 
+    //falta agregar email
+
 }

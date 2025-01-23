@@ -6,6 +6,7 @@ import com.teset.dto.cliente.ClienteResponseDTO;
 import com.teset.dto.cliente.DetalleResponseDTO;
 import com.teset.dto.negocio.ComercioResponseDTO;
 import com.teset.dto.wsTeset.ClienteResponseWbDTO;
+import com.teset.dto.wsTeset.ComercioResponseWbDTO;
 import com.teset.dto.wsTeset.DetalleResponseWbDTO;
 import com.teset.utils.enums.EstadoCliente;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                         //Revisar de donde se obtiene total a pagar
                         .totalAPagar(clienteResponse.getSaldoAPagar())
                         .estado(EstadoCliente.DISPONIBLE)
+
                         //ADD email
                         .email("costantinifranco2001@gmail.com")
                         .build();
@@ -104,7 +106,41 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
     @Override
     public List<ComercioResponseDTO> getComerciosAdheridosTeset() {
-        return List.of();
+
+        HttpHeaders headers = getHeaders();
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + "/Comercios/");
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    builder.toUriString(),
+                    HttpMethod.GET,
+                    entity,
+                    String.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<ComercioResponseWbDTO> comercioResponseWbDTO = objectMapper.readValue(
+                        response.getBody(),
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, ComercioResponseWbDTO.class)
+                );
+
+                return comercioResponseWbDTO.stream()
+                        .map(detalle -> ComercioResponseDTO.builder()
+                                .id(detalle.getCodcom())
+                                .nombre(detalle.getCnombre())
+                                .direccion(detalle.getCdomici())
+                                //falta agregar link de negocio y logo
+                                .build()
+                        )
+                        .toList();
+            } else {
+                throw new RuntimeException("Error al obtener los comercios: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al procesar la respuesta: " + e.getMessage(), e);
+        }
     }
 
     private HttpHeaders getHeaders() {
