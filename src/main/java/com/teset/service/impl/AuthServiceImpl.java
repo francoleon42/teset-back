@@ -61,7 +61,8 @@ public class AuthServiceImpl implements IAuthService {
 
     private void generarCodigo(String username, PropositoCode proposito) {
         Random random = new Random();
-        Integer codigo = 10000 + random.nextInt(90000);
+        Integer randomCod = 10000 + random.nextInt(90000);
+        String codigo= String.valueOf(randomCod);
 
         UserCode userCode = getUserCodeByProposito(username, proposito);
 
@@ -85,7 +86,7 @@ public class AuthServiceImpl implements IAuthService {
         enviarCodigoByCorreo(user.getUsuario(), proposito, codigo);
     }
 
-    private void enviarCodigoByCorreo(String destino, PropositoCode proposito, Integer codigo) {
+    private void enviarCodigoByCorreo(String destino, PropositoCode proposito, String codigo) {
         String asunto = "";
         String texto = "";
 
@@ -152,7 +153,6 @@ public class AuthServiceImpl implements IAuthService {
     public void updateStepTwo( UpdatePasswordRequestDTO userToUpdateDto) {
 
         Usuario user = userRepository.findUsuarioByDni( userToUpdateDto.getDni()).orElseThrow(() -> new NotFoundException("No se encontró el usuario con dni: " +   userToUpdateDto.getDni()));
-        System.out.println(user.getUsername());
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REST_PASSWORD);
 
         if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userToUpdateDto.getCodigo())

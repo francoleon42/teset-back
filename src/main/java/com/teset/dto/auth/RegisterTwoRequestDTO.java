@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class RegisterTwoRequestDTO {
     String username;
     String password;
-    Integer codigo;
+    String codigo;
 }

@@ -22,7 +22,7 @@ public class UserCode {
     private Integer id;
 
     @Column(name = "codigo")
-    private Integer codigo;
+    private String codigo;
 
     @Column(name = "creacion")
     private LocalDateTime creacion;

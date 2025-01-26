@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CodigoVerificationRequestDTO {
-    Integer codigo;
+    String codigo;
     String username;
     String codDispositivo;
 }
