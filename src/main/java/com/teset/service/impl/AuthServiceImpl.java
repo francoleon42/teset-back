@@ -52,14 +52,14 @@ public class AuthServiceImpl implements IAuthService {
 
 
         if(!user.getCodDispositivo().equals(userDto.getCodDispositivo())){
-            generarCodigo(user.getUsername(), PropositoCode.LOGIN);
             nuevoDispositivo = true;
         }
+        generarCodigo(user.getUsername(), PropositoCode.LOGIN,nuevoDispositivo);
 
         return LoginPasoUnoResponseDTO.builder().username(userDto.getUsername()).nuevoDispositivo(nuevoDispositivo).build();
     }
 
-    private void generarCodigo(String username, PropositoCode proposito) {
+    private void generarCodigo(String username, PropositoCode proposito,boolean enviarCodigo) {
         Random random = new Random();
         Integer randomCod = 10000 + random.nextInt(90000);
         String codigo= String.valueOf(randomCod);
@@ -83,7 +83,10 @@ public class AuthServiceImpl implements IAuthService {
         userCode.setCodigo(codigo);
         userCodeRepository.save(userCode);
 
-        enviarCodigoByCorreo(user.getUsuario(), proposito, codigo);
+        if(enviarCodigo){
+            enviarCodigoByCorreo(user.getUsuario(), proposito, codigo);
+        }
+
     }
 
     private void enviarCodigoByCorreo(String destino, PropositoCode proposito, String codigo) {
@@ -120,7 +123,7 @@ public class AuthServiceImpl implements IAuthService {
         if(!user.getCodDispositivo().equals(requestDto.getCodDispositivo()) ){
             user.setCodDispositivo(requestDto.getCodDispositivo());
             if (  userCode.getCodigo() == null || !userCode.getCodigo().equals(requestDto.getCodigo())
-                    || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 5) {
+                    || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 10) {
                 throw new LoginException("El código de verificación es incorrecto o ha expirado");
 
             }
@@ -144,7 +147,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public UpdateResponseDTO updateStepOne(String dni) {
         Usuario user = userRepository.findUsuarioByDni(dni).orElseThrow(() -> new NotFoundException("No se encontró el usuario con dni: " + dni));
-        generarCodigo(user.getUsername(), PropositoCode.REST_PASSWORD);
+        generarCodigo(user.getUsername(), PropositoCode.REST_PASSWORD,true);
         return UpdateResponseDTO.builder().username(user.getUsername()).role(user.getRol()).build();
     }
 
@@ -188,12 +191,12 @@ public class AuthServiceImpl implements IAuthService {
                 .usuario(cliente.getEmail())
                 .dni(userToRegisterDto.getDni())
                 .rol(Rol.CLIENTE)
-                .codDispositivo("codigoNuevo")
+                .codDispositivo("codigoRegistro")
                 .build();
 
         userRepository.save(user);
 
-       generarCodigo(cliente.getEmail(), PropositoCode.REGISTER);
+       generarCodigo(cliente.getEmail(), PropositoCode.REGISTER,true);
 
         return LoginResponseDTO
                 .builder()
