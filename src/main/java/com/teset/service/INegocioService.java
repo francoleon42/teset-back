@@ -9,6 +9,7 @@ import java.util.List;
 public interface INegocioService {
 
     List<ComercioResponseDTO> getComerciosAdheridos();
+    List<ComercioResponseDTO> getComerciosAdheridosPorNombre(String nombre);
     List<ContactoResponseDTO> getContactos();
     List<NovedadResponseDTO> getNovedades();
 }

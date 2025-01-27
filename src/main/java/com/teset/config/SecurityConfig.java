@@ -92,6 +92,7 @@ public class SecurityConfig {
     private void configureNegocioEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.GET, "/negocio/comercios_adheridos").permitAll()
+                .requestMatchers(HttpMethod.GET, "/negocio/comercios_adheridos_by_name").permitAll()
                 .requestMatchers(HttpMethod.GET, "/negocio/contactos").permitAll()
                 .requestMatchers(HttpMethod.GET, "/negocio/novedades").permitAll();
 

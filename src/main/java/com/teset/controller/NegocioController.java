@@ -8,10 +8,7 @@ import com.teset.service.INegocioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,11 @@ public class NegocioController {
     @GetMapping("/comercios_adheridos")
     public ResponseEntity<List<ComercioResponseDTO>> getcomerciosAdheridos() {
         return new ResponseEntity<>(negocioService.getComerciosAdheridos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/comercios_adheridos_by_name")
+    public ResponseEntity<List<ComercioResponseDTO>> getcomerciosAdheridosPorNombre(@RequestParam String nombre)  {
+        return new ResponseEntity<>(negocioService.getComerciosAdheridosPorNombre(nombre), HttpStatus.OK);
     }
     @GetMapping("/contactos")
     public ResponseEntity<List<ContactoResponseDTO>> getContactos() {

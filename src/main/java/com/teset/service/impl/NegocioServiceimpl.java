@@ -11,9 +11,11 @@ import com.teset.repository.INovedadRepository;
 import com.teset.service.INegocioService;
 import com.teset.webService.IWebServiceTesetClient;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,28 @@ public class NegocioServiceimpl implements INegocioService {
 
     @Override
     public List<ComercioResponseDTO> getComerciosAdheridos() {
-        return iWebServiceTesetClient.getComerciosAdheridosTeset();
+        List<ComercioResponseDTO> comercios = iWebServiceTesetClient.getComerciosAdheridosTeset();
+        return comercios.stream()
+                .limit(100)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ComercioResponseDTO> getComerciosAdheridosPorNombre(String nombre) {
+        List<ComercioResponseDTO> comerciosByName = iWebServiceTesetClient.getComerciosAdheridosTeset();
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return comerciosByName.stream()
+                    .limit(100)
+                    .collect(Collectors.toList());
+        }
+
+        String nombreBusqueda = nombre.toLowerCase().trim();
+        JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
+        return comerciosByName.stream()
+                .filter(comercio -> comercio.getNombre() != null &&
+                        similarity.apply(comercio.getNombre().toLowerCase(), nombreBusqueda) > 0.8)
+                .collect(Collectors.toList());
     }
 
     @Override
