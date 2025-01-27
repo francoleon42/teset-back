@@ -13,6 +13,7 @@ public class ComercioResponseDTO {
     String id;
     String nombre;
     String direccion;
+    String telefono;
     String logoLink;
     String link;
 }

@@ -29,7 +29,9 @@ public class Contacto {
     @Column(name = "tipo", nullable = false)
     private TipoContacto tipo;
 
-    @Column(name = "link")
+    @Column(name = "logo_link")
     private String logoLink;
 
+    @Column(name = "link")
+    private String link;
 }

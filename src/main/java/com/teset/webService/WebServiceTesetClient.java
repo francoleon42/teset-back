@@ -50,6 +50,8 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
                         //Revisar de donde se obtiene total a pagar
                         .totalAPagar(clienteResponse.getSaldoAPagar())
+                        .saldoDisponible(clienteResponse.getDisponible())
+
                         .estado(EstadoCliente.DISPONIBLE)
 
                         //ADD email
@@ -126,10 +128,11 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                 );
 
                 return comercioResponseWbDTO.stream()
-                        .map(detalle -> ComercioResponseDTO.builder()
-                                .id(detalle.getCodcom())
-                                .nombre(detalle.getCnombre())
-                                .direccion(detalle.getCdomici())
+                        .map(comercioWb -> ComercioResponseDTO.builder()
+                                .id(comercioWb.getCodcom())
+                                .nombre(comercioWb.getCnombre())
+                                .direccion(comercioWb.getCdomici())
+                                .telefono(comercioWb.getCtelnumero())
                                 //falta agregar link de negocio y logo
                                 .build()
                         )

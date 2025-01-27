@@ -26,6 +26,9 @@ public class ComercioResponseWbDTO {
     @JsonProperty("Cdomici")
     private String cdomici;
 
+    @JsonProperty("Ctelnumero")
+    private String ctelnumero;
+
     //falta agrgar el url link y logo link
 
 

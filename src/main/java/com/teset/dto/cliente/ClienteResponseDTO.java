@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ClienteResponseDTO {
     String nombre;
-    String saldoDisponible;
+    Double saldoDisponible;
     Double totalAPagar;
     String dni;
     String email;

@@ -30,7 +30,7 @@ public class Bootstrap implements ApplicationRunner {
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .rol(Rol.CLIENTE)
                 .alta(LocalDate.now())
-                .dni("2400042")
+                .dni("14430558")
                 .codDispositivo("codigoBoostrap")
                 .build();
 
@@ -39,42 +39,88 @@ public class Bootstrap implements ApplicationRunner {
 
         // Crear novedades
         Novedad novedad1 = Novedad.builder()
-                .titulo("Promoción de verano")
-                .linkImagen("https://example.com/images/verano.jpg")
-                .linkComercio("https://example.com/comercio/verano")
+                .titulo("SoloDeportes")
+                .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/18291311_CAI_Training_1920x540_copia.webp")
+                .linkComercio("https://www.solodeportes.com.ar")
                 .build();
 
         Novedad novedad2 = Novedad.builder()
-                .titulo("Nueva colección")
-                .linkImagen("https://example.com/images/coleccion.jpg")
-                .linkComercio("https://example.com/comercio/coleccion")
+                .titulo("SoloDeportes")
+                .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/08410911_Solo_Deportes_Desktop_BTS_copia.webp")
+                .linkComercio("https://www.solodeportes.com.ar")
                 .build();
 
-        novedadRepository.saveAll(List.of(novedad1, novedad2));
+        Novedad novedad3 = Novedad.builder()
+                .titulo("SoloDeportes")
+                .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/09042610_desktop.webp")
+                .linkComercio("https://www.solodeportes.com.ar")
+                .build();
+
+        Novedad novedad4 = Novedad.builder()
+                .titulo("SoloDeportes")
+                .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/18311211_DESKTOP.webp")
+                .linkComercio("https://www.solodeportes.com.ar")
+                .build();
+
+        Novedad novedad5 = Novedad.builder()
+                .titulo("SoloDeportes")
+                .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/12361208_SD_Banner_desktop.webp")
+                .linkComercio("https://www.solodeportes.com.ar")
+                .build();
+
+
+        novedadRepository.saveAll(List.of(novedad1, novedad2,novedad3,novedad4,novedad5));
 
         // Crear contactos
         Contacto contacto1 = Contacto.builder()
-                .titulo("Soporte técnico")
-                .subTitulo("Contacta con nuestro equipo")
-                .tipo(TipoContacto.TELEFONO)
-                .logoLink("ww.linkLogoEjemplo.com")
+                .titulo("Facebook")
+                .subTitulo("facebook.com/teset")
+                .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png")
+                .tipo(TipoContacto.REDES_SOCIALES)
+                .link("")
                 .build();
 
         Contacto contacto2 = Contacto.builder()
-                .titulo("Síguenos en Instagram")
-                .subTitulo("Descubre más contenido")
+                .titulo("Instagram")
+                .subTitulo("@teset")
+                .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png")
                 .tipo(TipoContacto.REDES_SOCIALES)
-                .logoLink("https://instagram.com/example")
+                .link("")
                 .build();
 
         Contacto contacto3 = Contacto.builder()
-                .titulo("Atención por WhatsApp")
-                .subTitulo("Resolvemos tus dudas")
+                .titulo("11-3060-4587")
+                .subTitulo("Prestamos")
+                .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png")
                 .tipo(TipoContacto.WHATSAPP)
-                .logoLink("https://wa.me/123456789")
+                .link("")
                 .build();
 
-        contactoRepository.saveAll(List.of(contacto1, contacto2, contacto3));
+        Contacto contacto4 = Contacto.builder()
+                .titulo("11-3060-4287")
+                .subTitulo("Deudas y Pagos")
+                .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png")
+                .tipo(TipoContacto.WHATSAPP)
+                .link("")
+                .build();
+
+        Contacto contacto5 = Contacto.builder()
+                .titulo("15-3000-4000")
+                .subTitulo("Nuevos prestamos")
+                .logoLink("https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968244_1280.png")
+                .tipo(TipoContacto.TELEFONO)
+                .link("")
+                .build();
+
+        Contacto contacto6 = Contacto.builder()
+                .titulo("15-3000-4000")
+                .subTitulo("Nuevos prestamos")
+                .logoLink("https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968244_1280.png")
+                .tipo(TipoContacto.TELEFONO)
+                .link("")
+                .build();
+
+        contactoRepository.saveAll(List.of(contacto1, contacto2, contacto3,contacto4,contacto5,contacto6));
     }
 
 }
