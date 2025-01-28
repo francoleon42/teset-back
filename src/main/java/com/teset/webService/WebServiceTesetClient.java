@@ -47,15 +47,16 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                         .builder()
                         .dni(dni)
                         .nombre(clienteResponse.getNombre())
-
-                        //Revisar de donde se obtiene total a pagar
-                        .totalAPagar(clienteResponse.getSaldoAPagar())
                         .saldoDisponible(clienteResponse.getDisponible())
+                        .saldoAPagar(clienteResponse.getSaldoAPagar())
+                        .importePxVto(clienteResponse.getImportePxVto())
 
+                        // add fecha
+                        .fechadeProximoVencimiento("04/06/2001")
                         .estado(EstadoCliente.DISPONIBLE)
 
                         //ADD email
-                        .email("costantinifranco2001@gmail.com")
+                        .email("francoleon2001@gmail.com")
                         .build();
             } else {
                 throw new RuntimeException("Error al obtener el cliente: " + response.getStatusCode());
@@ -89,8 +90,16 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                 return detallesResponseWbDTO.stream()
                         .map(detalle -> DetalleResponseDTO.builder()
                                 .id(detalle.getCodCom())
-                                .fecha(detalle.getFechaEmision())
+                                .fechaEmision(detalle.getFechaEmision())
+                                .secuencia(detalle.getSecuencia())
+                                .cuota(detalle.getCodCom())
+                                .importe(detalle.getImporte())
+
+                                .importePxVto(detalle.getImportePxVto())
                                 .cuota(detalle.getCuota())
+
+                                //add fecha
+                                .fechadeProximoVencimiento("04/06/2001")
 
                                 //REVISAR DUDA DE IMPORTE
                                 .importe(detalle.getImporte())

@@ -30,8 +30,8 @@ public class Bootstrap implements ApplicationRunner {
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .rol(Rol.CLIENTE)
                 .alta(LocalDate.now())
-                .dni("14430558")
                 .codDispositivo("codigoBoostrap")
+                .dni("14430558")
                 .build();
 
         userRepository.saveAll(List.of(root));

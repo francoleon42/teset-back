@@ -32,4 +32,6 @@ public class DetalleResponseWbDTO {
 
     @JsonProperty("Cuota")
     String cuota;
+
+    // add  fechadeProximoVencimiento
 }

@@ -14,7 +14,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DetalleResponseDTO {
     String id;
-    String fecha;
-    String cuota;
+    String fechaEmision;
+    int secuencia;
+    String codCom;
     Double importe;
+
+    String cuota;
+    Double importePxVto;
+    String fechadeProximoVencimiento;
+
 }

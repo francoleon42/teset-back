@@ -15,7 +15,9 @@ import java.math.BigDecimal;
 public class ClienteResponseDTO {
     String nombre;
     Double saldoDisponible;
-    Double totalAPagar;
+    Double saldoAPagar;
+    Double importePxVto;
+    String fechadeProximoVencimiento;
     String dni;
     String email;
     EstadoCliente estado;
