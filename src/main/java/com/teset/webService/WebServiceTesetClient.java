@@ -91,12 +91,13 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                         .map(detalle -> DetalleResponseDTO.builder()
                                 .id(detalle.getCodCom())
                                 .fechaEmision(detalle.getFechaEmision())
+                                .codCom(detalle.getCodCom())
                                 .secuencia(detalle.getSecuencia())
                                 .cuota(detalle.getCodCom())
                                 .importe(detalle.getImporte())
 
                                 .importePxVto(detalle.getImportePxVto())
-                                .cuota(detalle.getCuota())
+                                .cuota(convertirCuotaFormat(detalle.getCuota()))
 
                                 //add fecha
                                 .fechadeProximoVencimiento("04/06/2001")
@@ -113,6 +114,10 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
             e.printStackTrace();
             throw new RuntimeException("Error al procesar la respuesta: " + e.getMessage(), e);
         }
+    }
+    private String convertirCuotaFormat(String cuota){
+        String[] partes = cuota.split("/");
+        return "Cuota " + partes[0] + " de " + partes[1];
     }
 
     @Override
