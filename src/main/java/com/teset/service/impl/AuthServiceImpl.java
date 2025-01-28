@@ -105,7 +105,7 @@ public class AuthServiceImpl implements IAuthService {
             asunto = "VERIFICACION DE REGISTRO";
             texto = "Codigo de verificacion de registro: " + codigo;
         }
-        emailService.enviarCorreo(destino, asunto, "Codigo de verificacion de logueo: " + codigo);
+        emailService.enviarCorreo(destino, asunto, texto);
     }
 
 
