@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.springframework.stereotype.Service;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +48,11 @@ public class NegocioServiceimpl implements INegocioService {
         String nombreBusqueda = nombre.toLowerCase().trim();
         JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
         return comerciosByName.stream()
-                .filter(comercio -> comercio.getNombre() != null &&
-                        similarity.apply(comercio.getNombre().toLowerCase(), nombreBusqueda) > 0.8)
+                .filter(comercio -> comercio.getNombre() != null)
+                .map(comercio -> new AbstractMap.SimpleEntry<>(comercio, similarity.apply(comercio.getNombre().toLowerCase(), nombreBusqueda)))
+                .filter(entry -> entry.getValue() > 0.8)
+                .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
 

@@ -21,17 +21,32 @@ public class Bootstrap implements ApplicationRunner {
     private final INovedadRepository novedadRepository;
     private final IContactoRepository contactoRepository;
 
+    // Perfil para registrarse con francoleon2001@gmail.com usando el dni de daniel al registrarse 14430558
+//    @Override
+//    public void run(ApplicationArguments args) throws Exception {
+//        Usuario root = Usuario.builder()
 
+//                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
+//                .rol(Rol.CLIENTE)
+//                .alta(LocalDate.now())
+//                .codDispositivo("codigoBoostrap")
+//                .usuario("costantinifranco2001@gmail.com")
+//                .dni("14430557")
+//
+//                .build();
+//
+//        userRepository.saveAll(List.of(root));
+
+    // Perfil para usar para crear un usuario con mi correo usando el dni de daniel
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // Crear usuarios con builder
         Usuario root = Usuario.builder()
-                .usuario("francoleon2001@gmail.com")
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .rol(Rol.CLIENTE)
                 .alta(LocalDate.now())
                 .codDispositivo("codigoBoostrap")
                 .dni("14430558")
+                .usuario("francoleon2001@gmail.com")
                 .build();
 
         userRepository.saveAll(List.of(root));
@@ -69,7 +84,7 @@ public class Bootstrap implements ApplicationRunner {
                 .build();
 
 
-        novedadRepository.saveAll(List.of(novedad1, novedad2,novedad3,novedad4,novedad5));
+        novedadRepository.saveAll(List.of(novedad1, novedad2, novedad3, novedad4, novedad5));
 
         // Crear contactos
         Contacto contacto1 = Contacto.builder()
@@ -120,7 +135,7 @@ public class Bootstrap implements ApplicationRunner {
                 .link("")
                 .build();
 
-        contactoRepository.saveAll(List.of(contacto1, contacto2, contacto3,contacto4,contacto5,contacto6));
+        contactoRepository.saveAll(List.of(contacto1, contacto2, contacto3, contacto4, contacto5, contacto6));
     }
 
 }
