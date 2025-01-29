@@ -55,7 +55,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://3.95.1.110", "http://3.95.1.110:80","http://localhost:8081","http://192.168.0.13:8081"));
+        configuration.setAllowedOriginPatterns(List.of("http://192.168.0.13:8081/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
@@ -68,6 +68,8 @@ public class SecurityConfig {
 
     private void configurePublicEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 .requestMatchers(HttpMethod.POST, "/auth/register/step-one").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/auth/register/step-two").permitAll()
 
@@ -78,8 +80,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/auth/update/step-two").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ping").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
     }
 
     private void configureClienteEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
