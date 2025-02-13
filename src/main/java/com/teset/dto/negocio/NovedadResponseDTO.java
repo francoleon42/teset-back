@@ -20,4 +20,5 @@ public class NovedadResponseDTO {
     String titulo;
     String linkImagen;
     String linkComercio;
+    boolean mostrarEnInicio;
 }

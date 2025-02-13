@@ -27,4 +27,7 @@ public class Novedad {
     @Column(name = "link_comercio")
     private String linkComercio;
 
+    @Column(name = "mostrar_en_inicio")
+    private boolean mostrarEnInicio;
+
 }

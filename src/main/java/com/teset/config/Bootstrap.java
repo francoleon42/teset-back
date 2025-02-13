@@ -56,30 +56,35 @@ public class Bootstrap implements ApplicationRunner {
                 .titulo("SoloDeportes")
                 .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/18291311_CAI_Training_1920x540_copia.webp")
                 .linkComercio("https://www.solodeportes.com.ar")
+                .mostrarEnInicio(true)
                 .build();
 
         Novedad novedad2 = Novedad.builder()
                 .titulo("SoloDeportes")
                 .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/08410911_Solo_Deportes_Desktop_BTS_copia.webp")
                 .linkComercio("https://www.solodeportes.com.ar")
+                .mostrarEnInicio(true)
                 .build();
 
         Novedad novedad3 = Novedad.builder()
                 .titulo("SoloDeportes")
                 .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/09042610_desktop.webp")
                 .linkComercio("https://www.solodeportes.com.ar")
+                .mostrarEnInicio(true)
                 .build();
 
         Novedad novedad4 = Novedad.builder()
                 .titulo("SoloDeportes")
                 .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/18311211_DESKTOP.webp")
                 .linkComercio("https://www.solodeportes.com.ar")
+                .mostrarEnInicio(true)
                 .build();
 
         Novedad novedad5 = Novedad.builder()
                 .titulo("SoloDeportes")
                 .linkImagen("https://media2.solodeportes.com.ar/media/slider/slide/12361208_SD_Banner_desktop.webp")
                 .linkComercio("https://www.solodeportes.com.ar")
+                .mostrarEnInicio(false)
                 .build();
 
 

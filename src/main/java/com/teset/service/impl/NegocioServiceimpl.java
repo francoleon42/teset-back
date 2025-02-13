@@ -76,6 +76,7 @@ public class NegocioServiceimpl implements INegocioService {
                 .titulo(novedad.getTitulo())
                 .linkImagen(novedad.getLinkImagen())
                 .linkComercio(novedad.getLinkComercio())
+                .mostrarEnInicio(novedad.isMostrarEnInicio())
                 .build();
     }
     private ContactoResponseDTO convertToContactoDTO(Contacto contacto) {
