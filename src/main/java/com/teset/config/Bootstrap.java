@@ -21,11 +21,11 @@ public class Bootstrap implements ApplicationRunner {
     private final INovedadRepository novedadRepository;
     private final IContactoRepository contactoRepository;
 
-    // Perfil para registrarse con francoleon2001@gmail.com usando el dni de daniel al registrarse 14430558
-//    @Override
-//    public void run(ApplicationArguments args) throws Exception {
+     //Perfil para registrarse con francoleon2001@gmail.com usando el dni de daniel al registrarse 14430558
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
 //        Usuario root = Usuario.builder()
-
+//
 //                .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
 //                .rol(Rol.CLIENTE)
 //                .alta(LocalDate.now())
@@ -38,8 +38,7 @@ public class Bootstrap implements ApplicationRunner {
 //        userRepository.saveAll(List.of(root));
 
     // Perfil para usar para crear un usuario con mi correo usando el dni de daniel
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+
         Usuario root = Usuario.builder()
                 .contrasena("$2a$10$RRAzywJFxaAG3pRlHXep6u6VNKi5KOTT3M8GCxDPHpAyZ0ofX2Bcu")
                 .rol(Rol.CLIENTE)
