@@ -81,6 +81,7 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         userCode.setCodigo(codigo);
+        userCode.setCreacion(LocalDateTime.now());
         userCodeRepository.save(userCode);
 
         if(enviarCodigo){

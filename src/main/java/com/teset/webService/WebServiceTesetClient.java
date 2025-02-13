@@ -116,8 +116,12 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
         }
     }
     private String convertirCuotaFormat(String cuota){
-        String[] partes = cuota.split("/");
-        return "Cuota " + partes[0] + " de " + partes[1];
+        if (cuota != null) {
+            String[] partes = cuota.split("/");
+            return "Cuota " + partes[0] + " de " + partes[1];
+        } else {
+            return "En 1 pago";
+        }
     }
 
     @Override
