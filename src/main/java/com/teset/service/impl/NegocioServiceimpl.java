@@ -86,6 +86,7 @@ public class NegocioServiceimpl implements INegocioService {
                 .subTitulo(contacto.getSubTitulo())
                 .tipo(contacto.getTipo().toString())
                 .logoLink(contacto.getLogoLink())
+                .link(contacto.getLink())
                 .build();
 
     }

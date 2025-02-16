@@ -19,5 +19,6 @@ public class ContactoResponseDTO {
     String subTitulo;
     String tipo;
     String logoLink;
+    String link;
 
 }
