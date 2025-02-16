@@ -91,55 +91,55 @@ public class Bootstrap implements ApplicationRunner {
         novedadRepository.saveAll(List.of(novedad1, novedad2, novedad3, novedad4, novedad5));
 
         // Crear contactos
-        Contacto contacto1 = Contacto.builder()
+        Contacto facebook = Contacto.builder()
                 .titulo("Facebook")
-                .subTitulo("facebook.com/teset")
+                .subTitulo("facebook.com/@Teset-Prestamos personales ")
                 .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png")
-                .tipo(TipoContacto.REDES_SOCIALES)
-                .link("")
+                .tipo(TipoContacto.PRESENCIA_ONLINE)
+                .link("https://www.facebook.com/profile.php?id=100065507108950&rdid=0xUyuXusHOccY9WG&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F12CmvNYZGjd%2F")
                 .build();
 
-        Contacto contacto2 = Contacto.builder()
+        Contacto instagram = Contacto.builder()
                 .titulo("Instagram")
-                .subTitulo("@teset")
+                .subTitulo("@teset.ok")
                 .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png")
-                .tipo(TipoContacto.REDES_SOCIALES)
-                .link("")
+                .tipo(TipoContacto.PRESENCIA_ONLINE)
+                .link("https://www.instagram.com/teset.ok")
                 .build();
 
-        Contacto contacto3 = Contacto.builder()
-                .titulo("11-3060-4587")
-                .subTitulo("Prestamos")
+        Contacto web = Contacto.builder()
+                .titulo("Web")
+                .subTitulo("teset.com.ar")
+                .logoLink("https://i.pinimg.com/736x/fd/71/cc/fd71cc920df96dfb498587b177d3c658.jpg")
+                .tipo(TipoContacto.PRESENCIA_ONLINE)
+                .link("https://teset.com.ar/")
+                .build();
+
+        Contacto whatsapp = Contacto.builder()
+                .titulo("Whatsapp")
+                .subTitulo("(+54) 9116275-4219")
                 .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png")
-                .tipo(TipoContacto.WHATSAPP)
-                .link("")
+                .tipo(TipoContacto.CONTACTO_DIRECTO)
+                .link("https://wa.me/5491162754219")
                 .build();
 
-        Contacto contacto4 = Contacto.builder()
-                .titulo("11-3060-4287")
-                .subTitulo("Deudas y Pagos")
-                .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png")
-                .tipo(TipoContacto.WHATSAPP)
-                .link("")
+        Contacto email = Contacto.builder()
+                .titulo("Email")
+                .subTitulo("contacto@teset.com.ar")
+                .logoLink("https://i.pinimg.com/736x/ef/dd/14/efdd14aadcfd49b80c78522688ad371f.jpg")
+                .tipo(TipoContacto.CONTACTO_DIRECTO)
+                .link("mailto:contacto@teset.com.ar")
                 .build();
 
-        Contacto contacto5 = Contacto.builder()
-                .titulo("15-3000-4000")
-                .subTitulo("Nuevos prestamos")
+
+        Contacto telefono = Contacto.builder()
+                .titulo("Teléfono")
+                .subTitulo("011 52739865")
                 .logoLink("https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968244_1280.png")
-                .tipo(TipoContacto.TELEFONO)
-                .link("")
+                .tipo(TipoContacto.CONTACTO_DIRECTO)
+                .link("tel:+541152739865")
                 .build();
-
-        Contacto contacto6 = Contacto.builder()
-                .titulo("15-3000-4000")
-                .subTitulo("Nuevos prestamos")
-                .logoLink("https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968244_1280.png")
-                .tipo(TipoContacto.TELEFONO)
-                .link("")
-                .build();
-
-        contactoRepository.saveAll(List.of(contacto1, contacto2, contacto3, contacto4, contacto5, contacto6));
+        contactoRepository.saveAll(List.of(facebook, instagram, web, whatsapp, email, telefono));
     }
 
 }

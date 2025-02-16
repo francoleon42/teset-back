@@ -62,6 +62,7 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                 throw new RuntimeException("Error al obtener el cliente: " + response.getStatusCode());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

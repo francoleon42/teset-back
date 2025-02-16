@@ -23,12 +23,10 @@ public class ClienteServiceImpl implements IClienteService {
     @Override
     public ClienteResponseDTO getCliente(String dni) {
         ClienteResponseDTO cliente=  iWebServiceTesetClient.getClienteTeset(dni);
-        System.out.println(cliente);
         if(cliente==null){
             return ClienteResponseDTO.builder().estado(EstadoCliente.NO_DISPONIBLE).build();
-        }else{
-            return ClienteResponseDTO.builder().estado(EstadoCliente.DISPONIBLE).build();
         }
+        return cliente;
     }
 
 

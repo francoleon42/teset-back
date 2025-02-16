@@ -27,6 +27,9 @@ public class ClienteResponseWbDTO {
     @JsonProperty("ImportePxVto")
     private Double importePxVto;
 
+    @JsonProperty("FechaPxVto")
+    private String fechaPxVto;
+
 
     // agregar fechadeProximoVencimiento
     //falta agregar email
