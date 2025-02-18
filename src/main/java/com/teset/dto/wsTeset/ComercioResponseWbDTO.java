@@ -23,15 +23,29 @@ public class ComercioResponseWbDTO {
     @JsonProperty("Cnombre")
     private String cnombre;
 
+    @JsonProperty("Crubro")
+    private String crubro;
+
     @JsonProperty("Cdomici")
     private String cdomici;
+
+    @JsonProperty("Ctelcarac")
+    private String ctelcarac;
 
     @JsonProperty("Ctelnumero")
     private String ctelnumero;
 
-    //falta agrgar el url link y logo link
+    @JsonProperty("Clocali")
+    private String clocali;
 
+    @JsonProperty("Urllogo")
+    private String urllogo;
 
+    @JsonProperty("Urlpagweb")
+    private String urlpagweb;
+
+    @JsonProperty("Urlgmaps")
+    private String Urlgmaps;
 
 
 }

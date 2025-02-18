@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 @Component
@@ -127,7 +128,7 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
     @Override
     public List<ComercioResponseDTO> getComerciosAdheridosTeset() {
-
+        AtomicLong counter = new AtomicLong(1);
         HttpHeaders headers = getHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + "/Comercios/");
@@ -148,11 +149,15 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
                 return comercioResponseWbDTO.stream()
                         .map(comercioWb -> ComercioResponseDTO.builder()
-                                .id(comercioWb.getCodcom())
+                                .id( counter.getAndIncrement())
+                                .codCom(comercioWb.getCodcom())
                                 .nombre(comercioWb.getCnombre())
+                                .localidad(comercioWb.getClocali())
                                 .direccion(comercioWb.getCdomici())
-                                .telefono(comercioWb.getCtelnumero())
-                                //falta agregar link de negocio y logo
+                                .telefono(comercioWb.getCtelcarac()+comercioWb.getCtelnumero())
+                                .logoLink(comercioWb.getUrllogo())
+                                .urlpagweb(comercioWb.getUrlpagweb())
+                                .Urlgmaps(comercioWb.getUrlgmaps())
                                 .build()
                         )
                         .toList();

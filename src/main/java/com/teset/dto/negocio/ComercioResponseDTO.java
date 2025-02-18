@@ -1,5 +1,6 @@
 package com.teset.dto.negocio;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComercioResponseDTO {
-    String id;
+    Long id;
+    String codCom;
     String nombre;
+    String rubro;
+    String localidad;
     String direccion;
     String telefono;
     String logoLink;
-    String link;
+    String urlpagweb;
+    String Urlgmaps;
 }
