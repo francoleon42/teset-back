@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetalleResponseDTO {
-    String id;
+    Long id;
+    String codCom;
     String fechaEmision;
     int secuencia;
-    String codCom;
     Double importe;
 
     String cuota;

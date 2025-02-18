@@ -66,7 +66,7 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
     @Override
     public List<DetalleResponseDTO> getDetallesClienteTeset(String dni) {
-
+        AtomicLong counter = new AtomicLong(1);
         HttpHeaders headers = getHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + "/ClienteDetalle/" + dni);
@@ -87,7 +87,8 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
                 return detallesResponseWbDTO.stream()
                         .map(detalle -> DetalleResponseDTO.builder()
-                                .id(detalle.getCodCom())
+                                .id( counter.getAndIncrement())
+                                .codCom(detalle.getCodCom())
                                 .fechaEmision(detalle.getFechaEmision())
                                 .codCom(detalle.getCodCom())
                                 .secuencia(detalle.getSecuencia())
