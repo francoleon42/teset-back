@@ -42,22 +42,18 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                ClienteResponseWbDTO clienteResponse = objectMapper.readValue(response.getBody(), ClienteResponseWbDTO.class);
+                ClienteResponseWbDTO clienteResponseWbDTO = objectMapper.readValue(response.getBody(), ClienteResponseWbDTO.class);
 
                 return ClienteResponseDTO
                         .builder()
                         .dni(dni)
-                        .nombre(clienteResponse.getNombre())
-                        .saldoDisponible(clienteResponse.getDisponible())
-                        .saldoAPagar(clienteResponse.getSaldoAPagar())
-                        .importePxVto(clienteResponse.getImportePxVto())
-
-                        // add fecha
-                        .fechadeProximoVencimiento("04/06/2001")
+                        .nombre(clienteResponseWbDTO.getNombre())
+                        .saldoDisponible(clienteResponseWbDTO.getDisponible())
+                        .saldoAPagar(clienteResponseWbDTO.getSaldoAPagar())
+                        .importePxVto(clienteResponseWbDTO.getImportePxVto())
+                        .fechadeProximoVencimiento(clienteResponseWbDTO.getFechaPxVto())
+                        .email(clienteResponseWbDTO.getEmail())
                         .estado(EstadoCliente.DISPONIBLE)
-
-                        //ADD email
-                        .email("francoleon2001@gmail.com")
                         .build();
             } else {
                 throw new RuntimeException("Error al obtener el cliente: " + response.getStatusCode());
@@ -97,14 +93,9 @@ public class WebServiceTesetClient implements IWebServiceTesetClient {
                                 .secuencia(detalle.getSecuencia())
                                 .cuota(detalle.getCodCom())
                                 .importe(detalle.getImporte())
-
                                 .importePxVto(detalle.getImportePxVto())
                                 .cuota(convertirCuotaFormat(detalle.getCuota()))
-
-                                //add fecha
-                                .fechadeProximoVencimiento("04/06/2001")
-
-                                //REVISAR DUDA DE IMPORTE
+                                .fechadeProximoVencimiento(detalle.getFechaPxVto())
                                 .importe(detalle.getImporte())
                                 .build()
                         )

@@ -30,8 +30,8 @@ public class ClienteResponseWbDTO {
     @JsonProperty("FechaPxVto")
     private String fechaPxVto;
 
+    @JsonProperty("Mail")
+    private String email;
 
-    // agregar fechadeProximoVencimiento
-    //falta agregar email
 
 }
