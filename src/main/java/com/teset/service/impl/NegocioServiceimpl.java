@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +27,9 @@ public class NegocioServiceimpl implements INegocioService {
     private final IWebServiceTesetClient iWebServiceTesetClient;
     private final INovedadRepository novedadRepository;
     private final IContactoRepository contactoRepository;
+
+    private volatile List<ComercioResponseDTO> cachedComercios;
+    private long cacheExpirationTime;
 
     @Override
     public List<ComercioResponseDTO> getComerciosAdheridos() {
@@ -37,7 +41,11 @@ public class NegocioServiceimpl implements INegocioService {
 
     @Override
     public List<ComercioResponseDTO> getComerciosAdheridosPorNombre(String nombre) {
-        List<ComercioResponseDTO> comerciosByName = iWebServiceTesetClient.getComerciosAdheridosTeset();
+        if (cachedComercios == null || System.currentTimeMillis() > cacheExpirationTime) {
+            cachedComercios = iWebServiceTesetClient.getComerciosAdheridosTeset();
+            cacheExpirationTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
+        }
+        List<ComercioResponseDTO> comerciosByName = cachedComercios;
 
         if (nombre == null || nombre.trim().isEmpty()) {
             return comerciosByName.stream()
@@ -47,10 +55,15 @@ public class NegocioServiceimpl implements INegocioService {
 
         String nombreBusqueda = nombre.toLowerCase().trim();
         JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
-        return comerciosByName.stream()
+
+        return comerciosByName.parallelStream()
                 .filter(comercio -> comercio.getNombre() != null)
-                .map(comercio -> new AbstractMap.SimpleEntry<>(comercio, similarity.apply(comercio.getNombre().toLowerCase(), nombreBusqueda)))
-                .filter(entry -> entry.getValue() > 0.8)
+                .map(comercio -> {
+                    String lowerNombre = comercio.getNombre().toLowerCase();
+                    double score = similarity.apply(lowerNombre, nombreBusqueda);
+                    return new AbstractMap.SimpleEntry<>(comercio, score);
+                })
+                .filter(entry -> entry.getValue() > 0.7)
                 .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
