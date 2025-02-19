@@ -44,8 +44,8 @@ public class Bootstrap implements ApplicationRunner {
                 .rol(Rol.CLIENTE)
                 .alta(LocalDate.now())
                 .codDispositivo("codigoBoostrap")
-                .dni("14430558")
-                .usuario("francoleon2001@gmail.com")
+                .dni("38345839")
+                .usuario("jgpaolinelli@gmail.com")
                 .build();
 
         userRepository.saveAll(List.of(root));
