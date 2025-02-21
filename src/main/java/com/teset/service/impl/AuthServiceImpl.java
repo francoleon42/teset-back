@@ -95,15 +95,15 @@ public class AuthServiceImpl implements IAuthService {
         String texto = "";
 
         if (proposito == PropositoCode.LOGIN) {
-            asunto = "VERIFICACION DE INICIO SESION";
+            asunto = "Aviso de seguridad: Verificación de Inicio de Sesión";
             texto = "Codigo de verificacion de logueo: " + codigo;
         }
         if (proposito == PropositoCode.REST_PASSWORD) {
-            asunto = "CAMBIO DE CONSTRASEÑA";
+            asunto = "Aviso de seguridad: Verificación de cambio de contraseña";
             texto = "Codigo de verificacion para el cambio de contraseña: " + codigo;
         }
         if (proposito == PropositoCode.REGISTER) {
-            asunto = "VERIFICACION DE REGISTRO";
+            asunto = "Aviso de seguridad: Verificación de registro";
             texto = "Codigo de verificacion de registro: " + codigo;
         }
         emailService.enviarCorreo(destino, asunto, texto);
