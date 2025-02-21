@@ -16,16 +16,18 @@ public class MailConfiguration {
         String password = System.getenv("PASSWORD_SENDER");
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost("mail.teset.com.ar");
+        mailSender.setPort(465);
         mailSender.setUsername(email);
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.trust", "*");
+        props.put("mail.smtp.ssl.enable", "true");
         props.put("mail.debug", "true");
+
         return mailSender;
     }
 }
