@@ -1,5 +1,7 @@
 package com.teset.service;
 
+import com.teset.utils.enums.PropositoCode;
+
 public interface IEmailService {
-    void enviarCorreo(String toUser, String asunto, String text);
+    void generarCorreo(String destino, PropositoCode proposito, String codigo) ;
 }

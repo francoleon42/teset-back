@@ -91,22 +91,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     private void enviarCodigoByCorreo(String destino, PropositoCode proposito, String codigo) {
-        String asunto = "";
-        String texto = "";
-
-        if (proposito == PropositoCode.LOGIN) {
-            asunto = "Aviso de seguridad: Verificación de Inicio de Sesión";
-            texto = "Codigo de verificacion de logueo: " + codigo;
-        }
-        if (proposito == PropositoCode.REST_PASSWORD) {
-            asunto = "Aviso de seguridad: Verificación de cambio de contraseña";
-            texto = "Codigo de verificacion para el cambio de contraseña: " + codigo;
-        }
-        if (proposito == PropositoCode.REGISTER) {
-            asunto = "Aviso de seguridad: Verificación de registro";
-            texto = "Codigo de verificacion de registro: " + codigo;
-        }
-        emailService.enviarCorreo(destino, asunto, texto);
+        emailService.generarCorreo(destino,proposito,codigo);
     }
 
 
@@ -215,7 +200,7 @@ public class AuthServiceImpl implements IAuthService {
 
         UserCode userCode = getUserCodeByProposito(user.getUsername(), PropositoCode.REGISTER);
         if (userCode.getCodigo() == null || !userCode.getCodigo().equals(userRegisterTwo.getCodigo())
-                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 2) {
+                || Duration.between(userCode.getCreacion(), LocalDateTime.now()).toMinutes() > 10) {
             throw new LoginException("El código de verificación es incorrecto o ha expirado");
         }
 
