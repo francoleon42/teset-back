@@ -166,7 +166,9 @@ public class AuthServiceImpl implements IAuthService {
         if (cliente.getEstado().toString().equals(EstadoCliente.NO_DISPONIBLE.toString())) {
             throw new RegisterException("El usuario no es cliente");
         }
-
+        if (cliente.getEmail().isEmpty()) {
+            throw new RegisterException("El usuario no tiene correo asociado");
+        }
         Optional<Usuario> optionalUsuario = userRepository.findUsuarioByDni(userToRegisterDto.getDni());
         if (optionalUsuario.isPresent() && optionalUsuario.get().getPassword() != null) {
             throw new RegisterException("El usuario ya esta registrado");
